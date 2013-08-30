@@ -1,0 +1,33 @@
+# Compiled source #
+###################
+*pyc
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# Configs #
+###########
+*cfg
+
+# wavs #
+########
+*.wav
+
+# old files #
+########
+program/ignore/
+
+# acoustic_model #
+##################
+acoustic_model/bwaccumdir/
+acoustic_model/feat/
+acoustic_model/logdir/
+acoustic_model/model_architecture/
+acoustic_model/model_parameters
+acoustic_model/qmanager/
+acoustic_model/result/
+acoustic_model/trees/
+
