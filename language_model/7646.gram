@@ -1,0 +1,10 @@
+#JSGF V1.0;
+/**
+ * JSGF Grammar for Hello World example
+ */
+
+grammar seheiah;
+public <alarm> = Seheiah Hilfe
+public <ok> = Seheiah Alarm aus
+public <bye> = Seheiah bye bye
+public <test> = Seheiah test

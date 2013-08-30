@@ -1,0 +1,55 @@
+[logging]
+#loglevel = DEBUG = 10 | INFO = 20 | WARNING = 30 | ERROR = 40 | CRITICAL = 50
+logfile = ../log/seheiah.log
+loglevel = 20
+
+[logdb]
+#path to sqlite database
+database = ../database/seheiah.sqlite
+
+[monitor]
+#Arduino-Port
+arduino_port = /dev/sensors/arduino_75237333536351101290
+
+[checkbehavior]
+#intervals to considering in seconds
+interval = 300
+#tolerance, in which an activity event (in this case water flow) has to occure
+#means an regulary event can fire in an timeslot +/- (tolerance * interval) seconds 
+intervalquantum = 3
+#number of recorded days, per workdays and free days
+observePeriod = 30
+#Value for accepted cosinus similarity
+tresholdCosSimilarity = 0.65
+
+tresholdProbability = 0.6
+
+[alarmcascade]
+#time to interrupt alarm
+alarmValidateTime = 120
+#path for snapshot images
+snapshotpath = ../images/snapshot-
+#email configuration
+#recipients of alarm call (List)
+recipients = {email1, email2}
+#sender
+sender = sender@provider
+#Host for email delivery
+mailhost = mailhost
+#port
+mailport = 587
+#password
+mailpass = gehaim
+#subject
+mailsubject = "Alarm: kontaktiere den Opa"
+#message
+message = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
+
+
+[speechrecognition]
+#Hidden Markov Model Dir
+hmdir = ../acoustic_model/model_parameters/7646.cd_semi_200
+#language model
+lm = ../acoustic_model/etc/7646.lm
+#dict File
+dict = ../acoustic_model/etc/7646.dic
