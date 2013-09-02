@@ -1,7 +1,11 @@
 #emergencyca.py
 # -*- coding: utf-8 -*-
 
-#stoesst Alarmcascade an
+"""
+@author Falko Benthin
+@Date 02.09.2013
+@brief initiate alarm cascade
+"""
 
 import time #serial,sys
 import socket, os, os.path #für Kommunikation mit Unix-Sockets
@@ -39,7 +43,7 @@ class AlarmCascade(threading.Thread):
 
 
 	"""
-	Nimmt Kommandos des Sockets entgegen, prüft sie und setzt Alarm-Variablen
+	receive commands from socket, checks and set alarm varaibles
 	"""
 	def interpretMessage(self,message):
 		#nur schlucken, wenn noch kein Alarm ausgelöst wurde
@@ -94,7 +98,7 @@ class AlarmCascade(threading.Thread):
 		if not img:
 			print "imagefehler"
 		else:
-			self.snapshotFilename = config.get('alarmcascade','snapshotpath')+str(int(time.time()))+".jpg"
+			self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
 			cv.SaveImage(self.snapshotFilename, img)
 	
 	

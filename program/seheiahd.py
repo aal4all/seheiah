@@ -1,8 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+"""
+@author Falko Benthin
+@Date 02.09.2013
+@brief seheiah daemion, which starts the threads
+"""
 
-
-import serial, sys, time
+import serial, sys, time, os
 from daemon import runner
 import threading
 import logging
@@ -26,6 +30,9 @@ class Seheiah(object):
 		self.stderr_path = '/dev/tty'
 		self.pidfile_path =  '/tmp/seheiah.pid'
 		self.pidfile_timeout = 7
+		#set logfile
+		self.logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('logging','logfile'))
+		
 	
 	#at the start of seheiah subject is at home
 	def setPresence(self):
@@ -44,11 +51,9 @@ class Seheiah(object):
 	def run(self):
 		#set presence
 		self.setPresence()
-		
 		#set logging
-		logfile = config.get('logging','logfile')
 		loglevel = config.getint('logging','loglevel')
-		logging.basicConfig(filename=logfile,filemode = 'a',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
+		logging.basicConfig(filename=self.logfile,filemode = 'w',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 		logging.info("seheiahd started")
 		
 		mythreads = []

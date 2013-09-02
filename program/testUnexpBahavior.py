@@ -1,7 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#testUnexpBahavior.py
-#löst probehalter unerawrtetes Verhalten aus
+"""
+testUnexpBahavior.py
+@author Falko Benthin
+@Date 02.09.2013
+@brief initiate unexpected behavior for test dases
+"""
 import socket
 import os, os.path
 if os.path.exists("/tmp/seheiah_alarm.sock"):

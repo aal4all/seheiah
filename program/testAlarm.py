@@ -1,7 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#testAlarm.py
-#löst probehalter Alarm aus
+"""
+testUnexpBahavior.py
+@author Falko Benthin
+@Date 02.09.2013
+@brief initiate alarm fpr test cases
+"""
 import socket
 import os, os.path
 if os.path.exists("/tmp/seheiah_alarm.sock"):

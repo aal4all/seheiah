@@ -1,6 +1,11 @@
 #gst_sphinx_cli.py
 #-*- coding: utf-8 -*-
 
+"""
+@author Falko Benthin
+@Date 02.09.2013
+@brief Speech recognition of seheiah
+
 #	Modified from gst_sphinx_cli.py
 # http://gitorious.org/code-dump/gst-sphinx-cli
 # Copyright (c) 2012, Jacob Burbach <jmburbach@gmail.com>
@@ -28,10 +33,11 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 # THE POSSIBILITY OF SUCH DAMAGE.
+"""
 
 import threading
 import logging #logfile
-
+import os
 import gobject
 import pygst
 pygst.require('0.10')
@@ -50,9 +56,9 @@ class GstSphinxCli(threading.Thread): #object
 				
 		gobject.threads_init()
 		
-		hmm = config.get('speechrecognition','hmdir')
-		lm = config.get('speechrecognition','lm')
-		dic = config.get('speechrecognition','dict')
+		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','hmdir'))
+		lm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','lm'))
+		dic = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','dict'))
 		self.init_gst(hmm, lm, dic)
 		
 	def init_gst(self, hmm, lm, dic):
@@ -98,15 +104,24 @@ class GstSphinxCli(threading.Thread): #object
 
 	def partial_result(self, hyp, uttid):
 		""" handle partial result in `hyp' here """
-		"PARTIAL RESULT: ", hyp
 		pass
 
 	def final_result(self, hyp, uttid):
 		""" handle final result `hyp' here """
-		print "*************************************"
-		print "FINAL RESULT: ", hyp
-		pass
-	
+		#hyp is unicode string
+		#start Alarmcascade
+		if(u'SEHEIAH HILFE' in hyp):
+			logging.info("SEHEIAH HILFE detected")
+		#start test
+		if(u'SEHEIAH TEST' in hyp):
+			logging.info("SEHEIAH TEST detected")
+		#interrupt alarmcascade in case of unexpected behavior
+		if(u'SEHEIAH ALARM' in hyp):
+			logging.info("SEHEIAH ALARM AUS detected")
+		#deactivate monitoring
+		if(u'SEHEIAH BYE' in hyp):
+			logging.info("SEHEIAH BYE BYE detected")
+			self.setAbsence()	
 	
 	#set absence of monitored subject
 	def setAbsence(self):
@@ -122,10 +137,6 @@ class GstSphinxCli(threading.Thread): #object
 			logging.error("couldn't open file /tmp/seheiah_presence")
 	
 	def run(self):
-		#set logging
-		logfile = config.get('logging','logfile')
-		loglevel = config.getint('logging','loglevel')
-		logging.basicConfig(filename=logfile,filemode = 'a',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 		logging.info("Thread pocketsphinx started")
 		
 		gobject.MainLoop().run()

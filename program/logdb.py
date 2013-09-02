@@ -1,9 +1,13 @@
 #logdb.py
 # -*- coding: utf-8 -*-
 
-#enthält DB-Operationen für activity-monitor
+"""
+@author Falko Benthin
+@Date 02.09.2013
+@brief database operations for activity monitor
+"""
 
-import sqlite3
+import sqlite3, os
 from ConfigParser import SafeConfigParser
 
 #read variables
@@ -14,7 +18,7 @@ config.read(CONFIGFILE)
 class logDB(object):
 	#initialisieren
 	def __init__(self):
-		db = config.get('logdb','database')
+		db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('logdb','database'))
 		#Datenbank verbinden
 		self.conn = sqlite3.connect(db, timeout=10)
 		#Cursor-Objekt, um mit DB zu intaragieren

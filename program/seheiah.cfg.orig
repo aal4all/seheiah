@@ -1,11 +1,12 @@
 [logging]
 #loglevel = DEBUG = 10 | INFO = 20 | WARNING = 30 | ERROR = 40 | CRITICAL = 50
-logfile = ../log/seheiah.log
+#path to logfile (relative to path/seheiah)
+logfile = log/seheiah.log
 loglevel = 20
 
 [logdb]
-#path to sqlite database
-database = ../database/seheiah.sqlite
+#path to sqlite database  (relative to path/seheiah)
+database = database/seheiah.sqlite
 
 [monitor]
 #Arduino-Port
@@ -27,8 +28,8 @@ tresholdProbability = 0.6
 [alarmcascade]
 #time to interrupt alarm
 alarmValidateTime = 120
-#path for snapshot images
-snapshotpath = ../images/snapshot-
+#path for snapshot images (relative to path/seheiah)
+snapshotpath = images/snapshot-
 #email configuration
 #recipients of alarm call (List)
 recipients = {email1, email2}
@@ -47,9 +48,9 @@ message = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
 
 
 [speechrecognition]
-#Hidden Markov Model Dir
-hmdir = ../acoustic_model/model_parameters/7646.cd_semi_200
-#language model
-lm = ../acoustic_model/etc/7646.lm
-#dict File
-dict = ../acoustic_model/etc/7646.dic
+#Hidden Markov Model Dir (relative to path/seheiah)
+hmdir = acoustic_model/model_parameters/7646.cd_semi_200
+#language model (relative to path/seheiah)
+lm = acoustic_model/etc/7646.lm
+#dict File (relative to path/seheiah)
+dict = acoustic_model/etc/7646.dic

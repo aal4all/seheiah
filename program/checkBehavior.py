@@ -1,7 +1,11 @@
 #checkBehavior.py
 # -*- coding: utf-8 -*-
 
-#fragt DB ab und prüft Cosinus-Ahnlichkeit
+"""
+@author Falko Benthin
+@Date 02.09.2013
+@brief queries database and checks cosinus similarity
+"""
 
 import threading, time
 import numpy #Cosinius-Ähnlichkeit
@@ -257,10 +261,6 @@ class Check(threading.Thread):
 	def run(self):
 		db = logdb.logDB()
 		
-		#set logging
-		logfile = config.get('logging','logfile')
-		loglevel = config.getint('logging','loglevel')
-		logging.basicConfig(filename=logfile,filemode = 'a',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 		logging.info("Thread Checkbehavior started")
 		
 		#Gesamtwahrscheinlichkeit ausgeben

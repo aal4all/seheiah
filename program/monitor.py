@@ -1,7 +1,11 @@
 #monitor.py
 # -*- coding: utf-8 -*-
 
-#überwacht Sensor
+"""
+@author Falko Benthin
+@Date 02.09.2013
+@brief monitors sensor
+"""
 
 import serial, sys, time
 import threading
