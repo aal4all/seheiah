@@ -51,27 +51,33 @@ class AlarmCascade(threading.Thread):
 			print "perhaps Alarm"
 			self.incomingAlarmTime = int(time.time())
 		#für den Fall eines eindeutigen Notfalls, etwa Hilferuf von Spracherkennung
-		elif(message == "ALARM"):
-			print "Alarm !!!"
+		elif(message == "HILFE"):
+			print "HILFE !!!"
 			self.alarm = True
-			print "self.alarm=",self.alarm
+			#print "self.alarm=",self.alarm
+		elif(message == "ALARM AUS"):
+			try:
+				#self.incomingAlarmTime = 0
+				self.alarm = False
+				self.messageSended = False
+			except ValueError:	
+				pass
+		"""
 		#wenn abweichendes Verhalten festgestellt wurde, kann Alarm duch Wasserverbrauch entschärft werden
 		#ganz üble Frickellösung, unbedingt durch Spracherkennung oder von wasserverbrauch unabhängige Methode ersetzen
 		elif(("WATERFLOW" in message) and ((self.incomingAlarmTime > 0) or (self.alarm == True))):
 			splitMessage = message.split()
 			print "Message: ", message
 			try:
-				"""
-				wenn Wasserfluss einsetzt, nachdem unerwartetes Verhalten festgestellt wurde, kann von Fehlalarm ausgegangen werden
-				wenn Alarm bereits läuft, zurücksetzen, um nächstes Auftreten zu erkennen
-				"""
+				#wenn Wasserfluss einsetzt, nachdem unerwartetes Verhalten festgestellt wurde, kann von Fehlalarm ausgegangen werden
+				#wenn Alarm bereits läuft, zurücksetzen, um nächstes Auftreten zu erkennen
 				if(int(splitMessage[1]) > self.incomingAlarmTime):
 					self.incomingAlarmTime = 0
 					self.alarm = False
 					self.messageSended = False
 			except ValueError:	
 				pass
-		
+		"""
 
 	#spielt audiofile ab
 	def playAudioFile(self):

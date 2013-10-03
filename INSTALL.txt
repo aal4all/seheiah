@@ -1,1 +1,73 @@
-apt-get install ffmpeg streamer v4l-utils v4l-conf firmware-realtek wireless-tools wpasupplicant build-essential ca-certificates aria2 git-core bison libpulse-dev libasound2-dev libsndfile1-dev libsamplerate0-dev sqlite3 hdparm usbutils minicom screen msmtp msmtp-mta python python-serial python-sqlite python-rpi.gpio python-requests python-opencv python-scipy python-numpy python-pip python-daemon ntpdate alsa mpg321 lame bsd-mailx
+=============================================
+Seheiah INSTALL
+
+To run Seheiah, you need some requierements and pocketsphinx. It can be done under Raspbian Wheezy via:
+
+----------------------------------------------
+apt-get install ffmpeg streamer v4l-utils v4l-conf firmware-realtek wireless-tools wpasupplicant build-essential ca-certificates aria2 git-core bison libpulse-dev libasound2-dev libsndfile1-dev libsamplerate0-dev sqlite3 hdparm usbutils minicom screen msmtp msmtp-mta python python-serial python-sqlite python-rpi.gpio python-requests python-opencv python-scipy python-numpy python-pip python-daemon ntpdate alsa mpg321 lame bsd-mailx python-gst0.10 python-gst0.10-dev gstreamer-tools
+----------------------------------------------
+
+Create a udev-rule, so that your arduino has always the same file name ...
+
+----------------------------------------------
+#udev-rule /rules.d/70-microcontrollers.rules
+#arduino uno
+SUBSYSTEMS=="usb", KERNEL=="ttyACM[0-9]*", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0001", SYMLINK+="sensors/arduino_%s{serial}", MODE="660", GROUP="plugdev"
+----------------------------------------------
+
+... and add evt. your user to some required groups
+
+----------------------------------------------
+#as root
+usermod -a -G dialout username
+usermod -a -G audio username
+usermod -a -G video username
+usermod -a -G plugdev username
+----------------------------------------------
+
+Create a cron job to get the proper time
+
+----------------------------------------------
+#as root
+crontab -e
+
+#crontab root
+30 * * * * /usr/bin/ntpdate pool.ntp.org
+----------------------------------------------
+
+and set some options for audio and video if neccessary
+
+----------------------------------------------
+#in /etc/rc.local
+ modprobe snd-bcm2835
+ amixer cset numid=3 1
+
+#in /etc/modprobe/modprobe.conf.d/uvcvideo.conf
+ options uvcvideo nodrop=1 timeout=5000
+----------------------------------------------
+
+install Sphinxbase, pocketsphinx and sphinxtrain
+
+----------------------------------------------
+#I like aria, you gan also do it with wget
+
+aria2c http://sourceforge.net/projects/cmusphinx/files/sphinxbase/0.8/sphinxbase-0.8.tar.gz/download
+aria2c http://sourceforge.net/projects/cmusphinx/files/pocketsphinx/0.8/pocketsphinx-0.8.tar.gz/download
+aria2c http://sourceforge.net/projects/cmusphinx/files/sphinxtrain/1.0.8/sphinxtrain-1.0.8.tar.gz/download
+tar -xzf sphinxbase-0.8.tar.gz ; tar -xzf pocketsphinx-0.8.tar.gz ; tar -xzf sphinxtrain-1.0.8.tar.gz
+
+cd sphinxbase-0.8
+./configure
+make
+sudo make install
+cd ../pocketsphinx-0.8
+./configure
+make
+sudo make install
+cd ../sphinxtrain-1.0.8
+./configure
+make
+su do make install
+----------------------------------------------
+
+if this is done, you have to train pocketsphinx (this takes some time you can use "arecord -r 16000 -D hw:1,0 -d 5 -f S16_LE -c 1 filename.wav" to record your samples), set the variables in seheiah/program/seheiah.cfg and start seheiah with "./sehaiad.py" start

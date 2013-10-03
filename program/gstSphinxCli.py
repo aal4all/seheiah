@@ -110,14 +110,20 @@ class GstSphinxCli(threading.Thread): #object
 		""" handle final result `hyp' here """
 		#hyp is unicode string
 		#start Alarmcascade
+		logging.info('pocketsphinx:' + hyp + ' erkannt')
 		if(u'SEHEIAH HILFE' in hyp):
 			logging.info("SEHEIAH HILFE detected")
+			self.messageToAlarmCascade('HILFE')
+			#send Alarm-message to socket
 		#start test
 		if(u'SEHEIAH TEST' in hyp):
 			logging.info("SEHEIAH TEST detected")
+			#future project
 		#interrupt alarmcascade in case of unexpected behavior
 		if(u'SEHEIAH ALARM' in hyp):
 			logging.info("SEHEIAH ALARM AUS detected")
+			self.messageToAlarmCascade('ALARM AUS')
+			#sends alarm aus
 		#deactivate monitoring
 		if(u'SEHEIAH BYE' in hyp):
 			logging.info("SEHEIAH BYE BYE detected")
@@ -135,6 +141,24 @@ class GstSphinxCli(threading.Thread): #object
 				presenceFile.close()
 		except IOError:
 			logging.error("couldn't open file /tmp/seheiah_presence")
+	
+	#sends message to alarm cascade
+	#future todo:DRY
+	def messageToAlarmCascade(self,message):
+		import socket
+		import os, os.path
+		if os.path.exists("/tmp/seheiah_alarm.sock"):
+			client = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) #DGRAM
+			try:
+				client.connect("/tmp/seheiah_alarm.sock")
+				client.send(message)
+			except socket.error:
+				logging.error("Couldn't connect to socket /tmp/seheiah_alarm.sock")
+			finally:
+				client.close()
+		else:
+			logging.error("socket /tmp/seheiah_alarm.sock doesn't exists")
+			
 	
 	def run(self):
 		logging.info("Thread pocketsphinx started")
