@@ -44,7 +44,7 @@ mailpass = gehaim
 #subject
 mailsubject = "Alarm: kontaktiere den Opa"
 #message
-message = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
+mailmessage = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
 
 
 [speechrecognition]

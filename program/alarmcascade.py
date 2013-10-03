@@ -150,13 +150,13 @@ class AlarmCascade(threading.Thread):
 		server.ehlo()
 		server.starttls()
 		server.ehlo()
-		server.login(FROM, PASSWORD)  # optional
+		print server.login(FROM, PASSWORD)  # optional
  
 		#mail versenden
 		try:
 			print "Mail versenden"
 			sended = server.sendmail(FROM, TO, msg.as_string())
-			print "sended=",sended
+			#print "sended=",sended
 			server.quit()
 			self.snapshotFilename = ""
 			self.messageSended = True
@@ -183,8 +183,10 @@ class AlarmCascade(threading.Thread):
 
 
 	def run(self):
+		logging.info("Thread AlarmCascade started")
 		while True:
 			#auf Socket Nachrichten empfangen und weiterreichen
+			time.sleep(5)
 			try:
 				data = self.server.recv(32) #so viele Daten werden nicht erwartet
 				if not data:
