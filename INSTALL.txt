@@ -4,7 +4,7 @@ Seheiah INSTALL
 To run Seheiah, you need some requierements and pocketsphinx. It can be done under Raspbian Wheezy via:
 
 ----------------------------------------------
-apt-get install ffmpeg streamer v4l-utils v4l-conf firmware-realtek wireless-tools wpasupplicant build-essential ca-certificates aria2 git-core bison libpulse-dev libasound2-dev libsndfile1-dev libsamplerate0-dev sqlite3 hdparm usbutils minicom screen msmtp msmtp-mta python python-serial python-sqlite python-rpi.gpio python-requests python-opencv python-scipy python-numpy python-pip python-daemon ntpdate alsa mpg321 lame bsd-mailx python-gst0.10 python-gst0.10-dev gstreamer-tools gstreamer0.10-alsa gstreamer0.10-plugins-base libpulse-dev gstreamer0.10-pulseaudio libgpm2 libpulse-mainloop-glib0 dbus-x11 psmisc pulseaudio-utils consolekit libasound2-plugins libck-connector0 libdbus-glib-1-2 libfftw3-3 libltdl7 libpam-ck-connector libpolkit-gobject-1-0 libspeexdsp1 libsystemd-daemon0 libtdb1 libwebrtc-audio-processing-0 pulseaudio pulseaudio-module-x11 rtkit
+apt-get install ffmpeg streamer v4l-utils v4l-conf firmware-realtek wireless-tools wpasupplicant build-essential ca-certificates aria2 git-core bison libpulse-dev libasound2-dev libsndfile1-dev libsamplerate0-dev sqlite3 hdparm usbutils minicom screen msmtp msmtp-mta python python-serial python-sqlite python-requests python-opencv python-scipy python-numpy python-pip python-daemon ntpdate alsa mpg321 lame bsd-mailx python-gst0.10 python-gst0.10-dev gstreamer-tools gstreamer0.10-alsa gstreamer0.10-plugins-base libpulse-dev gstreamer0.10-pulseaudio libgpm2 libpulse-mainloop-glib0 dbus-x11 psmisc pulseaudio-utils consolekit libasound2-plugins libck-connector0 libdbus-glib-1-2 libfftw3-3 libltdl7 libpam-ck-connector libpolkit-gobject-1-0 libspeexdsp1 libsystemd-daemon0 libtdb1 libwebrtc-audio-processing-0 pulseaudio pulseaudio-module-x11 rtkit
 ----------------------------------------------
 
 Create a udev-rule, so that your arduino has always the same file name ...
@@ -70,7 +70,7 @@ make
 su do make install
 ----------------------------------------------
 
-if this is done, you have to train pocketsphinx (this takes some time you can use "arecord -r 16000 -D hw:1,0 -d 5 -f S16_LE -c 1 filename.wav" to record your samples), set the variables in seheiah/program/seheiah.cfg and start seheiah with "./sehaiad.py" start
+if this is done, you have to train pocketsphinx (this takes some time you can use "arecord -r 16000 -D hw:1,0 -d 5 -f S16_LE -c 1 filename.wav" to record your samples), set the variables in seheiah/program/seheiah.cfg and start seheiah with "./sehaiad.py start"
 
 perhaps you have to change some files else to get run pulseaudio properly
 ref: http://stackoverflow.com/questions/17778532/raspberrypi-pocketsphinx-ps3eye-error-failed-to-open-audio-device
@@ -117,3 +117,5 @@ default-sample-channels = 2"
 
 adduser username pulse-access
 ----------------------------------------------
+
+check the Bash-scripts in directory seheiah/helpers and modify the paths. Then do the scripts in cronjobs to check, if seheiahd and pulseaudio are running and internet connection is available

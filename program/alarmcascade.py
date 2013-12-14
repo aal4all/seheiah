@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 02.09.2013
+@Date 03.11.2013
 @brief initiate alarm cascade
 """
 
@@ -82,7 +82,8 @@ class AlarmCascade(threading.Thread):
 	#spielt audiofile ab
 	def playAudioFile(self):
 		from subprocess import Popen, PIPE
-		output = Popen(['mpg321', os.path.realpath(__file__)+'../mp3s/unexpected_behavior.mp3'], stdout=PIPE)
+		#output = Popen(['mpg321', os.path.realpath(__file__)+'../audiofiles/de_unexpected_behavior.mp3'], stdout=PIPE)
+		output = Popen(['mpg321', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))], stdout=PIPE)
 		print output.stdout.read()
 		
     

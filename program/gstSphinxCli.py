@@ -62,7 +62,8 @@ class GstSphinxCli(threading.Thread): #object
 		self.init_gst(hmm, lm, dic)
 		
 	def init_gst(self, hmm, lm, dic):
-		self.pipeline = gst.parse_launch('pulsesrc device="alsa_input.usb-046d_0825_6FD11520-02-U0x46d0x825.analog-mono" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink')
+		self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink')
+		#pulsesrc
 		"""alsasrc device=hw:1,0 ! "audio/x-raw-int,channels=1,rate=16000" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink"""
 		#lm=' + lm + ' dict=' + dic + ' hmm=' + hmm + ' 
 		asr = self.pipeline.get_by_name('asr')
