@@ -104,6 +104,7 @@ load-module module-zeroconf-publish
 
 /etc/libao.conf
 "s,default_driver=alsa,default_driver=pulse,g"
+#in my tests pulseaudio blocks output, the program hangs, so I turned it back to the defaults and speech recognition uses the gstreamer-pipeline with pulse
 
 /etc/pulse/daemon.conf
 carlettPi added this
