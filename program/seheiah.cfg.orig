@@ -45,7 +45,8 @@ mailpass = gehaim
 mailsubject = "Alarm: kontaktiere den Opa"
 #message
 mailmessage = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
-
+#audiofiles
+audioUnexpectedBehavior = audiofiles/de_unexpected_behavior.mp3
 
 [speechrecognition]
 #Hidden Markov Model Dir (relative to path/seheiah)
@@ -54,3 +55,5 @@ hmdir = acoustic_model/model_parameters/7646.cd_semi_200
 lm = acoustic_model/etc/7646.lm
 #dict File (relative to path/seheiah)
 dict = acoustic_model/etc/7646.dic
+#microphone device (webcam) for pulse audio, get it with "pact list sources"
+mic = alsa_input.usb-046d_HD_Webcam_C525_6691A520-00-C525.analog-mono
