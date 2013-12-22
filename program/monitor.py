@@ -3,13 +3,14 @@
 
 """
 @author Falko Benthin
-@Date 02.09.2013
-@brief monitors sensor
+@Date 22.12.2013
+@brief monitors flow sensor
 """
 
 import serial, sys, time
 import threading
 from ConfigParser import SafeConfigParser
+import logging
 #own classes
 import logdb
 
@@ -25,7 +26,10 @@ class Monitor(threading.Thread):
 		self.daemon = True
 		#self.port = #port='/dev/sensors/arduino_A400fXzQ' #Mutterns Sensor
 		self.port = config.get('monitor','arduino_port')
+		self.sensor_threshold_min = config.getint('monitor','sensor_threshold_min')
+		self.sensor_threshold_max= config.getint('monitor','sensor_threshold_max')
 		self.starttime = 0
+		
 		
 		#presence
 		#per default assume, that patient is at home when monitoring starts
@@ -35,7 +39,7 @@ class Monitor(threading.Thread):
 	#Setzt Anwesenheit via DAtei
 	def setPresence(self,value):
 		try:
-			presenceFile = open("/home/falko/nactivity_presence", "w")
+			presenceFile = open("/tmp/seheiah_presence", "w")
 			try:
 				presenceFile.write(str(value))
 			finally:
@@ -53,12 +57,18 @@ class Monitor(threading.Thread):
 			try:
 				inputAsInteger=int(serialFromArduino.readline())
 				self.starttime = 0
-				if(inputAsInteger >= 10):
+				if(inputAsInteger >= self.sensor_threshold_min):
 					self.starttime = int(time.time()) #setzt Startzeit
 					self.setPresence(1) #Wenn Wasser verbraucht wird, ist Typ auch daheim
 					#solange sensor feuert, Zeit festhalten
-					while (int(serialFromArduino.readline()) != 0):
+					while not (inputAsInteger < self.sensor_threshold_min):
 						time.sleep(0.5)
+						inputAsInteger = int(serialFromArduino.readline())
+						#log for debugging and get trhesholds
+						if(int(time.time()) % 5 == 0):
+							logging.debug("Value: %s", inputAsInteger)
+						
+						
 				
 					#Zeit berechnen, die Wasser entnommen wurde (min 1 sek)
 					duration = (int(time.time())) - self.starttime

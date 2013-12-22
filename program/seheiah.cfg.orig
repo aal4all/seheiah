@@ -11,6 +11,9 @@ database = database/seheiah.sqlite
 [monitor]
 #Arduino-Port
 arduino_port = /dev/sensors/arduino_75237333536351101290
+#thresholds to minimize false water flow regognition, sometimes flow sensor detect flow, but there istn't. I think, it's often some induction in cable, from power lines, mobile phones or CB radio users 
+sensor_threshold_min = 10
+sensor_threshold_max = 10000
 
 [checkbehavior]
 #intervals to considering in seconds
