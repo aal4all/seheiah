@@ -66,7 +66,7 @@ class Monitor(threading.Thread):
 						inputAsInteger = int(serialFromArduino.readline())
 						#log for debugging and get trhesholds
 						if(int(time.time()) % 5 == 0):
-							logging.debug("Value: %s", inputAsInteger)
+							logging.debug("Value: %s" % inputAsInteger)
 						
 						
 				
