@@ -7,7 +7,8 @@
 @brief initiate alarm cascade
 """
 
-import time, gc
+import time
+import subprocess
 import socket, os, os.path #für Kommunikation mit Unix-Sockets
 import threading
 import logging
@@ -81,13 +82,13 @@ class AlarmCascade(threading.Thread):
 
 	#spielt audiofile ab
 	def playAudioFile(self):
-		from subprocess import Popen, PIPE
-		output = Popen(['mpg321', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))], stdout=PIPE)
+		subprocess.Popen(['mpg321', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))], stdout=PIPE)
 		print output.stdout.read()
 		
     
 	#does a beautyful picture of a room
 	def makeSnapshot(self):
+		"""
 		import cv
 		my_width = 320
 		my_height = 240
@@ -105,8 +106,12 @@ class AlarmCascade(threading.Thread):
 			print "imagefehler"
 		else:
 			self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
-			cv.SaveImage(self.snapshotFilename, img)			
-	
+			cv.SaveImage(self.snapshotFilename, img)
+		"""
+		#delegate the snapshot to subprocess. because its memoryintensive
+		self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
+		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"snapshot.py"), self.snapshotFilename])
+		p.communicate()
 	
 	#sends E-Mail to family, friends, ...
 	def sendEmailMessage(self):
@@ -160,15 +165,16 @@ class AlarmCascade(threading.Thread):
 			except Exception, e:
 				errorMsg = "Unable to send email. Error: %s" % str(e)
 				logging.error(errorMsg)
+	
 		#if message sended, reset snapshot, so that no old picture will be sended
 		if(self.messageSended):
 			self.snapshotFilename = ""
-
+		
 	#Bild machen, angehörige informieren
 	def processAlarm(self):
 		if(self.messageSended == False):
 			print "processAlarm Action"
-			self.makeSnapshot()
+			print self.makeSnapshot()
 			self.sendEmailMessage()
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
