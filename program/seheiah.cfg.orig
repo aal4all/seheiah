@@ -13,7 +13,11 @@ database = database/seheiah.sqlite
 arduino_port = /dev/sensors/arduino_75237333536351101290
 #thresholds to minimize false water flow regognition, sometimes flow sensor detect flow, but there istn't. I think, it's often some induction in cable, from power lines, mobile phones or CB radio users 
 sensor_threshold_min = 10
-sensor_threshold_max = 10000
+#pir, you can add an additional pir direct to rpi, possible values are true and false
+pir = false
+#Pir GPIO to use on Pi
+pirGPIO = 7
+
 
 [checkbehavior]
 #intervals to considering in seconds
@@ -23,6 +27,8 @@ interval = 300
 intervalquantum = 3
 #number of recorded days, per workdays and free days
 observePeriod = 30
+#number of days to learn before seheiah decide about emergency case
+minObservedPeriod = 7
 #Value for accepted cosinus similarity
 tresholdCosSimilarity = 0.65
 
@@ -34,8 +40,8 @@ alarmValidateTime = 120
 #path for snapshot images (relative to path/seheiah)
 snapshotpath = images/snapshot-
 #email configuration
-#recipients of alarm call (List)
-recipients = {email1, email2}
+#email-recipients of alarm call, comma seperated list
+recipients = emailaddress1,emailaddress2
 #sender
 sender = sender@provider
 #Host for email delivery

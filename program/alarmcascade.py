@@ -1,13 +1,13 @@
-#emergencyca.py
+#alarmcascade.py
 # -*- coding: utf-8 -*-
 
 """
 @author Falko Benthin
-@Date 03.11.2013
+@Date 02.01.2014
 @brief initiate alarm cascade
 """
 
-import time #serial,sys
+import time, gc
 import socket, os, os.path #für Kommunikation mit Unix-Sockets
 import threading
 import logging
@@ -82,7 +82,6 @@ class AlarmCascade(threading.Thread):
 	#spielt audiofile ab
 	def playAudioFile(self):
 		from subprocess import Popen, PIPE
-		#output = Popen(['mpg321', os.path.realpath(__file__)+'../audiofiles/de_unexpected_behavior.mp3'], stdout=PIPE)
 		output = Popen(['mpg321', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))], stdout=PIPE)
 		print output.stdout.read()
 		
@@ -106,11 +105,11 @@ class AlarmCascade(threading.Thread):
 			print "imagefehler"
 		else:
 			self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
-			cv.SaveImage(self.snapshotFilename, img)
+			cv.SaveImage(self.snapshotFilename, img)			
 	
 	
-	#versendet Nachricht an liebe Verwandte, Freunde, ...
-	def sendMessage(self):
+	#sends E-Mail to family, friends, ...
+	def sendEmailMessage(self):
 		import smtplib
 		from email import Encoders
 		from email.MIMEBase import MIMEBase
@@ -119,9 +118,7 @@ class AlarmCascade(threading.Thread):
 		from email.Utils import formatdate
 		
 		filePath = self.snapshotFilename
-		
-		print "sendMessage"
-		
+		#recipients
 		TO = config.get('alarmcascade','recipients').split(',')
 		FROM = config.get('alarmcascade','sender')
 		#mailserver
@@ -129,49 +126,50 @@ class AlarmCascade(threading.Thread):
 		PORT = config.getint('alarmcascade','mailport')
 		PASSWORD = config.get('alarmcascade','mailpass')
  		
-		#Anhang vorbereiten
+		#prepare attachment
 		attachment = MIMEBase('application', "octet-stream")
 		attachment.set_payload( open(filePath,"rb").read() )
 		Encoders.encode_base64(attachment)
 		attachment.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(filePath))
  		
-		# Nachricht klar machen
-		#header
-		msg = MIMEMultipart()
-		msg["From"] = FROM
-		msg["To"] = TO
-		msg["Subject"] = config.get('alarmcascade','mailsubject').strip('"')
-		msg['Date']    = formatdate(localtime=True)
-		msg.attach(MIMEText(config.get('alarmcascade','mailmessage').strip('"')))
-		msg.attach(attachment)
-		print "Server kontaktieren"
-		#mailserver kontaktieren
-		server = smtplib.SMTP(HOST,PORT) #evtl. Inhalt in Klammern löschen
-		#server.connect(HOST,PORT)
-		server.ehlo()
-		server.starttls()
-		server.ehlo()
-		print server.login(FROM, PASSWORD)  # optional
- 
-		#mail versenden
-		try:
-			print "Mail versenden"
-			sended = server.sendmail(FROM, TO, msg.as_string())
-			#print "sended=",sended
-			server.quit()
+		for mailAddress in TO:
+			#header
+			logging.info("prepare e-mail for: %s" % mailAddress)
+			msg = MIMEMultipart()
+			msg["From"] = FROM
+			msg["To"] = mailAddress
+			msg["Subject"] = config.get('alarmcascade','mailsubject').strip('"')
+			msg['Date']    = formatdate(localtime=True)
+			msg.attach(MIMEText(config.get('alarmcascade','mailmessage').strip('"')))
+			msg.attach(attachment)
+			#contact mailserver
+			server = smtplib.SMTP(HOST,PORT)
+			server.ehlo()
+			server.starttls()
+			server.ehlo()
+			loginSuccess = server.login(FROM, PASSWORD)
+			logging.info(loginSuccess)
+			
+			#send e-mail
+			try:
+				logging.info("try to send email to: %s" % mailAddress)
+				server.sendmail(FROM, mailAddress, msg.as_string())
+				server.quit()
+				self.messageSended = True
+				logging.info("email to: %s sended" % mailAddress)
+			except Exception, e:
+				errorMsg = "Unable to send email. Error: %s" % str(e)
+				logging.error(errorMsg)
+		#if message sended, reset snapshot, so that no old picture will be sended
+		if(self.messageSended):
 			self.snapshotFilename = ""
-			self.messageSended = True
-		except Exception, e:
-			errorMsg = "Unable to send email. Error: %s" % str(e)
-		#snapshot zurücksetzen, so dass nie alte Bilder versand werden
-
 
 	#Bild machen, angehörige informieren
 	def processAlarm(self):
 		if(self.messageSended == False):
 			print "processAlarm Action"
 			self.makeSnapshot()
-			self.sendMessage()
+			self.sendEmailMessage()
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
 	def checkAlarm(self):
