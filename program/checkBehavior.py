@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 02.09.2013
+@Date 03.01.2014
 @brief queries database and checks cosinus similarity
 """
 
@@ -31,6 +31,8 @@ class Check(threading.Thread):
 		self.intervalQuantum = config.getint('checkbehavior','intervalquantum')
 		#number of recorded days, per workdays and free days
 		self.observePeriod = config.getint('checkbehavior','observePeriod')
+		#number of days to learn before seheiah decide about emergency case
+		self.minObservedPeriod = config.getint('checkbehavior','minObservedPeriod')
 		#threshold for accepted cosinus similarity
 		self.tresholdCosSimilarity = config.getfloat('checkbehavior','tresholdCosSimilarity')
 		#threshold for probability of relevant behavior occurence, necessary to filter one-time or rarely events
@@ -269,8 +271,12 @@ class Check(threading.Thread):
 		
 		while True:
 			currTime = int(time.time())
+			#weekend?
+			weekend = self.getWeekend(currTime)
+			#Anzahl gespeicherter Tage
+			savedDays = db.getSavedDays(self.getCurrentDay(currTime),weekend)
 			#pro interval einmal Verhalten prüfen, falls Patient anwesend ist
-			if((0 < currTime % self.interval <= 25) and self.getPresence() and not self.markerCheckBehavior):
+			if((0 < currTime % self.interval <= 25) and savedDays <= self.minObservedPeriod and self.getPresence() and not self.markerCheckBehavior):
 				self.checkBehavior(db)
 			#nach prüfung Marker wieder zurücksetzen
 			elif((currTime % self.interval > 25) and self.markerCheckBehavior):
@@ -280,8 +286,7 @@ class Check(threading.Thread):
 			if((0 < currTime % 86400 <= 600) and not self.markerCheckDelete):
 				logging.info("delOldEntries")
 				self.markerCheckDelete = True
-				weekend = db.delOldEntries(self.getWeekend(currTime))
-				if(db.getSavedDays(self.getCurrentDay(currTime),weekend) > self.observePeriod):
+				if(savedDays > self.observePeriod):
 					db.delOldEntries(weekend)
 			elif(currTime % 86400 > 600):
 				self.markerCheckDelete = False				

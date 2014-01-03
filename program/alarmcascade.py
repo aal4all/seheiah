@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 02.01.2014
+@Date 03.01.2014
 @brief initiate alarm cascade
 """
 
@@ -13,6 +13,7 @@ import socket, os, os.path #für Kommunikation mit Unix-Sockets
 import threading
 import logging
 from ConfigParser import SafeConfigParser
+
 #eigene klassen
 
 
