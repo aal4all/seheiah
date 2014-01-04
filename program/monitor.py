@@ -3,8 +3,8 @@
 
 """
 @author Falko Benthin
-@Date 22.12.2013
-@brief monitors flow sensor
+@Date 04.01.2014
+@brief monitors flow and pir sensors
 """
 
 import serial, sys, time
@@ -29,9 +29,20 @@ class Monitor(threading.Thread):
 		self.sensor_threshold_min = config.getint('monitor','sensor_threshold_min')
 		self.pir = config.getboolean('monitor','pir')
 		if(self.pir):
+			"""
 			import RPi.GPIO as GPIO
 			self.pirGPIO = config.int('monitor','pirGPIO')
 			GPIO.setup(pirGPIO,GPIO.IN)
+			"""
+			try:
+				import pigpio
+			except ImportError:
+				self.pigpio = None
+			else:
+				self.pigpio = pigpio
+				self.pirGPIO = config.getint('monitor','pirGPIO')
+				self.pigpio.start()
+				self.pigpio.set_mode(self.pirGPIO,  self.pigpio.INPUT)
 		self.starttime = 0
 		
 		
@@ -62,8 +73,11 @@ class Monitor(threading.Thread):
 			pass
 			
 	def run(self):
-		db = logdb.logDB()	#Datenbank übernehmen
-		#Sensor abfragen
+		
+		logging.info("Thread Monitor started")
+		
+		db = logdb.logDB()	#load database
+		#connection arduino flow sensor
 		serialFromArduino=serial.Serial(self.port,9600)
 		serialFromArduino.flushInput()
 		
@@ -83,14 +97,14 @@ class Monitor(threading.Thread):
 			#read pir
 			if(self.pir):
 				try:
-					pirState = GPIO.input(pirGPIO)
+					pirState = self.pigpio.read(self.pirGPIO)
 					if(pirState == 1):
 						#if pir is in the area, where the subject is staying most of the time, you need another variable than  
 						self.setStartTime()
 						#while pir is firing
 						while not (pirState == 0):
 							time.sleep(0.5)
-							pirState = GPIO.input(pirGPIO)
+							pirState = self.pigpio.read(self.pirGPIO)
 				except Exception, e:
 					logging.error(str(e))
 					
@@ -104,4 +118,5 @@ class Monitor(threading.Thread):
 		#close database
 		db.closeDB()
 		# Reset GPIO settings
-		GPIO.cleanup()
+		#GPIO.cleanup()
+		self.pigpio.stop()

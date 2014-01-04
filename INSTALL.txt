@@ -120,3 +120,6 @@ adduser username pulse-access
 ----------------------------------------------
 
 check the Bash-scripts in directory seheiah/helpers and modify the paths. Then do the scripts in cronjobs to check, if seheiahd and pulseaudio are running and internet connection is available
+
+To use a PIR on GPIO run pigpio daemon
+http://abyz.co.uk/rpi/pigpio/index.html
