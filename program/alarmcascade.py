@@ -83,9 +83,8 @@ class AlarmCascade(threading.Thread):
 
 	#spielt audiofile ab
 	def playAudioFile(self):
-		subprocess.Popen(['mpg321', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))], stdout=PIPE)
-		print output.stdout.read()
-		
+		p = subprocess.Popen(['mpg321','-oalsa', '-ahw:0,0', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))])
+		p.communicate()		
     
 	#does a beautyful picture of a room
 	def makeSnapshot(self):
@@ -175,7 +174,7 @@ class AlarmCascade(threading.Thread):
 	def processAlarm(self):
 		if(self.messageSended == False):
 			print "processAlarm Action"
-			print self.makeSnapshot()
+			self.makeSnapshot()
 			self.sendEmailMessage()
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
