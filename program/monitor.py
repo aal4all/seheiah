@@ -13,6 +13,7 @@ import logging
 #own
 import logdb
 import readConfig as rc
+import presence
 
 class Monitor(threading.Thread):
 	#initialisieren
@@ -42,31 +43,19 @@ class Monitor(threading.Thread):
 		
 		
 		#presence
-		#per default assume, that patient is at home when monitoring starts
-		self.setPresence(1)
+		#per default assume, that patient is at home when activity is detected
+		self.presence = presence.Presence()
 
 	#set start time, if a sensor is firing
 	def setStartTime(self):
 		self.starttime = int(time.time())
 		#if there is water flow or motion, the monitored senior is alive and home
-		self.setPresence(1)
+		self.presence.set(1)
 	
 	#returns starttime, it's important to detect long waterflow
 	def getStartTime(self):
 		return self.starttime
 
-	#an Spracherkennung binden
-	#Setzt Anwesenheit via DAtei
-	def setPresence(self,value):
-		try:
-			presenceFile = open("/tmp/seheiah_presence", "w")
-			try:
-				presenceFile.write(str(value))
-			finally:
-				presenceFile.close()
-		except IOError:
-			pass
-			
 	def run(self):
 		
 		logging.info("Thread Monitor started")

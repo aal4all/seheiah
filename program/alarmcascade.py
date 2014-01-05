@@ -81,26 +81,6 @@ class AlarmCascade(threading.Thread):
     
 	#does a beautyful picture of a room
 	def makeSnapshot(self):
-		"""
-		import cv
-		my_width = 320
-		my_height = 240
-		print "makeSnapshot"
-		#initialise webcam  (cam 0)
-		capture = cv.CaptureFromCAM(0)
-		if not capture:
-			print "capture-Fehler"
-		else:
-			#bildeigenschaften
-			cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT, my_height)
-			cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH, my_width)
-		img = cv.QueryFrame(capture)
-		if not img:
-			print "imagefehler"
-		else:
-			self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
-			cv.SaveImage(self.snapshotFilename, img)
-		"""
 		#delegate the snapshot to subprocess. because its memoryintensive
 		self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
 		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"snapshot.py"), self.snapshotFilename])

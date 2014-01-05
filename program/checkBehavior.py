@@ -13,6 +13,7 @@ import logging #logdatei
 #own
 import logdb
 import readConfig as rc
+import presence
 
 class Check(threading.Thread):
 	def __init__(self, mon):
@@ -39,6 +40,8 @@ class Check(threading.Thread):
 		#marker for actions
 		self.markerCheckBehavior = False #wurde verhalten im interval abgefragt?
 		self.markerCheckDelete = False #wurden alte Werte korrekt gelöscht?
+		
+		self.presence = presence.Presence()
 		
 	"""
 	ermittelt Zeiten für Vektoren
@@ -226,35 +229,6 @@ class Check(threading.Thread):
 		else:
 			logging.error("socket /tmp/seheiah_alarm.sock doesn't exists")
 	
-	
-	#prüft via Datei, ob Patient anwesend ist
-	def getPresence(self):
-		presenceValue = True
-		try:
-			presenceFile = open("/tmp/seheiah_presence", "r")
-			try:
-				presenceValue = int(presenceFile.read())
-			except IOError:
-				logging.error("couldn't read from file /tmp/seheiah_presence")
-			finally:
-				presenceFile.close()
-		except IOError:
-			logging.error("file /tmp/seheiah_presence doesn't exists")
-		return bool(presenceValue)
-	
-	#set presence of monitored subject
-	def setPresence(self):
-		try:
-			presenceFile = open("/tmp/seheiah_presence", "w")
-			try:
-				presenceFile.write('1')
-			except IOError:
-				logging.error("couldn't write to file /tmp/seheiah_presence")
-			finally:
-				presenceFile.close()
-		except IOError:
-			logging.error("couldn't open file /tmp/seheiah_presence")
-	
 	def run(self):
 		db = logdb.logDB()
 		
@@ -271,7 +245,7 @@ class Check(threading.Thread):
 			#Anzahl gespeicherter Tage
 			savedDays = db.getSavedDays(self.getCurrentDay(currTime),weekend)
 			#pro interval einmal Verhalten prüfen, falls Patient anwesend ist
-			if((0 < currTime % self.interval <= 25) and savedDays >= self.minObservedPeriod and self.getPresence() and not self.markerCheckBehavior):
+			if((0 < currTime % self.interval <= 25) and savedDays >= self.minObservedPeriod and self.presence.get() and not self.markerCheckBehavior):
 				self.checkBehavior(db)
 			#nach prüfung Marker wieder zurücksetzen
 			elif((currTime % self.interval > 25) and self.markerCheckBehavior):

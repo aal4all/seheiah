@@ -6,7 +6,7 @@
 @brief seheiah daemion, which starts the threads
 """
 
-import serial, sys, time, os
+import time, os
 from daemon import runner
 import threading
 import logging
@@ -28,24 +28,8 @@ class Seheiah(object):
 		#set logfile
 		self.logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','logfile'))
 		
-	
-	#at the start of seheiah subject is at home
-	def setPresence(self):
-		try:
-			presenceFile = open("/tmp/seheiah_presence", "w")
-			try:
-				presenceFile.write('1')
-			except IOError:
-				logging.error("couldn't write to file /tmp/seheiah_presence")
-			finally:
-				presenceFile.close()
-		except IOError:
-			logging.error("couldn't open file /tmp/seheiah_presence")
-	
 	#als daemon laufen
 	def run(self):
-		#set presence
-		self.setPresence()
 		#set logging
 		loglevel = rc.config.getint('logging','loglevel')
 		logging.basicConfig(filename=self.logfile,filemode = 'w',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")

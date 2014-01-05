@@ -35,7 +35,7 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-#import threading
+
 import logging #logfile
 import os,time
 import gobject
@@ -45,15 +45,15 @@ gobject.threads_init()
 import gst
 #own
 import readConfig as rc
+import presence
 
-class GstSphinxCli(object): #object threading.Thread
+class GstSphinxCli(object):
 
 	def __init__(self): #hmm, lm, dic
-		#threading.Thread.__init__(self) #threading-class initialisieren
-		#self.daemon = True
 		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','hmdir'))
 		lm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','lm'))
 		dic = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','dict'))
+		self.presence = presence.Presence()
 		self.init_gst(hmm, lm, dic)
 		
 	def init_gst(self, hmm, lm, dic):
@@ -122,21 +122,8 @@ class GstSphinxCli(object): #object threading.Thread
 		#deactivate monitoring
 		if(u'SEHEIAH BYE' in hyp):
 			logging.info("SEHEIAH BYE BYE detected")
-			self.setAbsence()	
-	
-	#set absence of monitored subject
-	def setAbsence(self):
-		try:
-			presenceFile = open("/tmp/seheiah_presence", "w")
-			try:
-				presenceFile.write('0')
-			except IOError:
-				logging.error("couldn't write to file /tmp/seheiah_presence")
-			finally:
-				presenceFile.close()
-		except IOError:
-			logging.error("couldn't open file /tmp/seheiah_presence")
-	
+			self.presence.set(0)	
+
 	#sends message to alarm cascade
 	#future todo:DRY
 	def messageToAlarmCascade(self,message):
