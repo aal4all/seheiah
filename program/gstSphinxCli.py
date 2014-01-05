@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 02.09.2013
+@Date 05.01.2013
 @brief Speech recognition of seheiah
 
 #	Modified from gst_sphinx_cli.py
@@ -35,12 +35,13 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import threading
+#import threading
 import logging #logfile
-import os
+import os,time
 import gobject
 import pygst
 pygst.require('0.10')
+gobject.threads_init()
 import gst
 from ConfigParser import SafeConfigParser
 
@@ -48,37 +49,32 @@ CONFIGFILE = "seheiah.cfg"
 config = SafeConfigParser()
 config.read(CONFIGFILE)
 
-class GstSphinxCli(threading.Thread): #object
+class GstSphinxCli(object): #object threading.Thread
 
 	def __init__(self): #hmm, lm, dic
-		threading.Thread.__init__(self) #threading-class initialisieren
-		self.daemon = True
-				
-		gobject.threads_init()
-		
+		#threading.Thread.__init__(self) #threading-class initialisieren
+		#self.daemon = True
 		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','hmdir'))
 		lm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','lm'))
 		dic = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','dict'))
 		self.init_gst(hmm, lm, dic)
 		
 	def init_gst(self, hmm, lm, dic):
-		self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink')
 		#pulsesrc
-		"""alsasrc device=hw:1,0 ! "audio/x-raw-int,channels=1,rate=16000" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink"""
+		#self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
+		#alsasrc
+		self.pipeline = gst.parse_launch('alsasrc device=' + config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#lm=' + lm + ' dict=' + dic + ' hmm=' + hmm + ' 
 		asr = self.pipeline.get_by_name('asr')
 		asr.connect('partial_result', self.asr_partial_result)
 		asr.connect('result', self.asr_result)
-		print "HMM" + hmm + ", LM: " + lm + ", DIC " + dic
 		asr.set_property("hmm", hmm)
 		asr.set_property("lm", lm)
 		asr.set_property("dict", dic)
 		asr.set_property('configured', True)
-
 		bus = self.pipeline.get_bus()
 		bus.add_signal_watch()
 		bus.connect('message::application', self.application_message)
-
 		self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def asr_partial_result(self, asr, text, uttid):
@@ -111,14 +107,15 @@ class GstSphinxCli(threading.Thread): #object
 		""" handle final result `hyp' here """
 		#hyp is unicode string
 		#start Alarmcascade
-		logging.info('pocketsphinx:' + hyp + ' erkannt')
+		logging.debug('pocketsphinx:' + hyp + ' erkannt')
 		if(u'SEHEIAH HILFE' in hyp):
 			logging.info("SEHEIAH HILFE detected")
+			print "SEHEIAH HILFE detected"
 			self.messageToAlarmCascade('HILFE')
 			#send Alarm-message to socket
 		#start test
-		if(u'SEHEIAH TEST' in hyp):
-			logging.info("SEHEIAH TEST detected")
+		#if(u'SEHEIAH TEST' in hyp):
+			#logging.info("SEHEIAH TEST detected")
 			#future project
 		#interrupt alarmcascade in case of unexpected behavior
 		if(u'SEHEIAH ALARM' in hyp):
@@ -162,6 +159,5 @@ class GstSphinxCli(threading.Thread): #object
 			
 	
 	def run(self):
-		logging.info("Thread pocketsphinx started")
-		
+		logging.info("Thread Pocketsphinx started")
 		gobject.MainLoop().run()

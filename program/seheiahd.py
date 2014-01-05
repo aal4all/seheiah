@@ -64,11 +64,11 @@ class Seheiah(object):
 		mythreads.append(mon)
 		mythreads.append(alarm)
 		mythreads.append(check)
-		mythreads.append(pocketsphinx)
+		#mythreads.append(pocketsphinx)
 		
 		for thread in mythreads:
 			thread.start()
-
+		pocketsphinx.run()
 		
 		while True:
 			time.sleep(0.01)

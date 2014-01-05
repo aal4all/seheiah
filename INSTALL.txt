@@ -72,6 +72,17 @@ su do make install
 
 if this is done, you have to train pocketsphinx (this takes some time you can use "arecord -r 16000 -D hw:1,0 -d 5 -f S16_LE -c 1 filename.wav" to record your samples), set the variables in seheiah/program/seheiah.cfg and start seheiah with "./sehaiad.py start"
 
+
+Im my case first alsa stessed, after a switch to pulseaudio i thougt, this was it, but it was'nt. Pulseaudio on rpi really really stessed. The solutions are queues. if 
+
+----------------------------------------------
+gst-launch alsasrc device=hw:1,0 ! queue ! audioconvert ! audioresample ! "audio/x-raw-int, rate=16000, width=16, depth=16, channels=1" ! vader name=vader auto-threshold=true ! pocketsphinx lm=/home/falko/seheiah/acoustic_model/etc/7646.lm dict=/home/falko/seheiah/acoustic_model/etc/7646.dic hmm=/home/falko/seheiah/acoustic_model/model_parameters/7646.cd_semi_200 name=listener ! fakesink dump=1
+----------------------------------------------
+runs in your case, do nothing. 
+
+
+THIS IS ONLY FOR PULSEAUDIO USERS, WHERE PULSEAUDIO RUNS WITHOUT PROBLEMS
+
 perhaps you have to change some files else to get run pulseaudio properly
 ref: http://stackoverflow.com/questions/17778532/raspberrypi-pocketsphinx-ps3eye-error-failed-to-open-audio-device
 
@@ -118,6 +129,10 @@ default-sample-channels = 2"
 
 adduser username pulse-access
 ----------------------------------------------
+
+
+
+
 
 check the Bash-scripts in directory seheiah/helpers and modify the paths. Then do the scripts in cronjobs to check, if seheiahd and pulseaudio are running and internet connection is available
 
