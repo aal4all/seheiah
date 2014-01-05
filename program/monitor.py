@@ -3,21 +3,16 @@
 
 """
 @author Falko Benthin
-@Date 04.01.2014
+@Date 05.01.2014
 @brief monitors flow and pir sensors
 """
 
 import serial, sys, time
 import threading
-from ConfigParser import SafeConfigParser
 import logging
-#own classes
+#own
 import logdb
-
-#read variables
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
+import readConfig as rc
 
 class Monitor(threading.Thread):
 	#initialisieren
@@ -25,13 +20,13 @@ class Monitor(threading.Thread):
 		threading.Thread.__init__(self) #threading-class initialisieren
 		self.daemon = True
 		#self.port = #port='/dev/sensors/arduino_A400fXzQ' #Mutterns Sensor
-		self.port = config.get('monitor','arduino_port')
-		self.sensor_threshold_min = config.getint('monitor','sensor_threshold_min')
-		self.pir = config.getboolean('monitor','pir')
+		self.port = rc.config.get('monitor','arduino_port')
+		self.sensor_threshold_min = rc.config.getint('monitor','sensor_threshold_min')
+		self.pir = rc.config.getboolean('monitor','pir')
 		if(self.pir):
 			"""
 			import RPi.GPIO as GPIO
-			self.pirGPIO = config.int('monitor','pirGPIO')
+			self.pirGPIO = rc.config.int('monitor','pirGPIO')
 			GPIO.setup(pirGPIO,GPIO.IN)
 			"""
 			try:
@@ -40,7 +35,7 @@ class Monitor(threading.Thread):
 				self.pigpio = None
 			else:
 				self.pigpio = pigpio
-				self.pirGPIO = config.getint('monitor','pirGPIO')
+				self.pirGPIO = rc.config.getint('monitor','pirGPIO')
 				self.pigpio.start()
 				self.pigpio.set_mode(self.pirGPIO,  self.pigpio.INPUT)
 		self.starttime = 0

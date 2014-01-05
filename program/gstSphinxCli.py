@@ -43,27 +43,24 @@ import pygst
 pygst.require('0.10')
 gobject.threads_init()
 import gst
-from ConfigParser import SafeConfigParser
-
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
+#own
+import readConfig as rc
 
 class GstSphinxCli(object): #object threading.Thread
 
 	def __init__(self): #hmm, lm, dic
 		#threading.Thread.__init__(self) #threading-class initialisieren
 		#self.daemon = True
-		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','hmdir'))
-		lm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','lm'))
-		dic = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('speechrecognition','dict'))
+		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','hmdir'))
+		lm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','lm'))
+		dic = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','dict'))
 		self.init_gst(hmm, lm, dic)
 		
 	def init_gst(self, hmm, lm, dic):
 		#pulsesrc
 		#self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#alsasrc
-		self.pipeline = gst.parse_launch('alsasrc device=' + config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
+		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#lm=' + lm + ' dict=' + dic + ' hmm=' + hmm + ' 
 		asr = self.pipeline.get_by_name('asr')
 		asr.connect('partial_result', self.asr_partial_result)

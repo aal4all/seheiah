@@ -8,14 +8,7 @@
 """
 import sys
 import cv
-from ConfigParser import SafeConfigParser
 #eigene klassen
-
-
-#read variables
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
 
 snapshotFilename = sys.argv[1]
 
@@ -34,5 +27,4 @@ img = cv.QueryFrame(capture)
 if not img:
 	print "imagefehler"
 else:
-	#self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
 	cv.SaveImage(snapshotFilename, img)

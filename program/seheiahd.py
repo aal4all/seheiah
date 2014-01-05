@@ -10,17 +10,12 @@ import serial, sys, time, os
 from daemon import runner
 import threading
 import logging
-from ConfigParser import SafeConfigParser
-#eigene Klassen
+#eigene
 import monitor
 import checkBehavior
 import alarmcascade
 import gstSphinxCli
-
-#read variables
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
+import readConfig as rc
 
 class Seheiah(object):
 	#initialisieren
@@ -31,7 +26,7 @@ class Seheiah(object):
 		self.pidfile_path =  '/tmp/seheiah.pid'
 		self.pidfile_timeout = 7
 		#set logfile
-		self.logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('logging','logfile'))
+		self.logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','logfile'))
 		
 	
 	#at the start of seheiah subject is at home
@@ -52,7 +47,7 @@ class Seheiah(object):
 		#set presence
 		self.setPresence()
 		#set logging
-		loglevel = config.getint('logging','loglevel')
+		loglevel = rc.config.getint('logging','loglevel')
 		logging.basicConfig(filename=self.logfile,filemode = 'w',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 		logging.info("seheiahd started")
 		

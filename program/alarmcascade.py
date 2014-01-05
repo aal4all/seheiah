@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 03.01.2014
+@Date 05.01.2014
 @brief initiate alarm cascade
 """
 
@@ -12,15 +12,8 @@ import subprocess
 import socket, os, os.path #für Kommunikation mit Unix-Sockets
 import threading
 import logging
-from ConfigParser import SafeConfigParser
-
-#eigene klassen
-
-
-#read variables
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
+#eigene
+import readConfig as rc
 
 class AlarmCascade(threading.Thread):
 	#initialisieren
@@ -38,7 +31,7 @@ class AlarmCascade(threading.Thread):
 		
 		self.incomingAlarmTime = 0	#Zeitstempel eines möglichen Alarms
 		#time to interrupt alarm
-		self.alarmValidateTime = config.getint('alarmcascade','alarmValidateTime')
+		self.alarmValidateTime = rc.config.getint('alarmcascade','alarmValidateTime')
 		self.alarm = False
 		self.snapshotFilename = "" #name der Snaphot-Datei
 		self.messageSended = False #Marker, ob NAchricht bereits gesendet wurde
@@ -83,7 +76,7 @@ class AlarmCascade(threading.Thread):
 
 	#spielt audiofile ab
 	def playAudioFile(self):
-		p = subprocess.Popen(['mpg321','-oalsa', '-ahw:0,0', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','audioUnexpectedBehavior'))])
+		p = subprocess.Popen(['mpg321','-oalsa', '-ahw:0,0', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','audioUnexpectedBehavior'))])
 		p.communicate()		
     
 	#does a beautyful picture of a room
@@ -105,11 +98,11 @@ class AlarmCascade(threading.Thread):
 		if not img:
 			print "imagefehler"
 		else:
-			self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
+			self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
 			cv.SaveImage(self.snapshotFilename, img)
 		"""
 		#delegate the snapshot to subprocess. because its memoryintensive
-		self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
+		self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
 		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"snapshot.py"), self.snapshotFilename])
 		p.communicate()
 	
@@ -124,12 +117,12 @@ class AlarmCascade(threading.Thread):
 		
 		filePath = self.snapshotFilename
 		#recipients
-		TO = config.get('alarmcascade','recipients').split(',')
-		FROM = config.get('alarmcascade','sender')
+		TO = rc.config.get('alarmcascade','recipients').split(',')
+		FROM = rc.config.get('alarmcascade','sender')
 		#mailserver
-		HOST = config.get('alarmcascade','mailhost')
-		PORT = config.getint('alarmcascade','mailport')
-		PASSWORD = config.get('alarmcascade','mailpass')
+		HOST = rc.config.get('alarmcascade','mailhost')
+		PORT = rc.config.getint('alarmcascade','mailport')
+		PASSWORD = rc.config.get('alarmcascade','mailpass')
  		
 		#prepare attachment
 		attachment = MIMEBase('application', "octet-stream")
@@ -143,9 +136,9 @@ class AlarmCascade(threading.Thread):
 			msg = MIMEMultipart()
 			msg["From"] = FROM
 			msg["To"] = mailAddress
-			msg["Subject"] = config.get('alarmcascade','mailsubject').strip('"')
+			msg["Subject"] = rc.config.get('alarmcascade','mailsubject').strip('"')
 			msg['Date']    = formatdate(localtime=True)
-			msg.attach(MIMEText(config.get('alarmcascade','mailmessage').strip('"')))
+			msg.attach(MIMEText(rc.config.get('alarmcascade','mailmessage').strip('"')))
 			msg.attach(attachment)
 			#contact mailserver
 			server = smtplib.SMTP(HOST,PORT)

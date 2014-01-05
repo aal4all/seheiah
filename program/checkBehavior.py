@@ -10,14 +10,9 @@
 import threading, time
 import numpy #Cosinius-Ähnlichkeit
 import logging #logdatei
-from ConfigParser import SafeConfigParser
-#own classes
+#own
 import logdb
-
-#read variables
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
+import readConfig as rc
 
 class Check(threading.Thread):
 	def __init__(self, mon):
@@ -25,18 +20,18 @@ class Check(threading.Thread):
 		self.daemon = True
 		self.mon = mon #monitor object for time requests
 		#intervals to considering in seconds
-		self.interval = config.getint('checkbehavior','interval')
+		self.interval = rc.config.getint('checkbehavior','interval')
 		#tolerance, in which an activity event (in this case water flow) has to occure
 		#means an regulary event can fire in an timeslot +/- (tolerance * interval) seconds 
-		self.intervalQuantum = config.getint('checkbehavior','intervalquantum')
+		self.intervalQuantum = rc.config.getint('checkbehavior','intervalquantum')
 		#number of recorded days, per workdays and free days
-		self.observePeriod = config.getint('checkbehavior','observePeriod')
+		self.observePeriod = rc.config.getint('checkbehavior','observePeriod')
 		#number of days to learn before seheiah decide about emergency case
-		self.minObservedPeriod = config.getint('checkbehavior','minObservedPeriod')
+		self.minObservedPeriod = rc.config.getint('checkbehavior','minObservedPeriod')
 		#threshold for accepted cosinus similarity
-		self.tresholdCosSimilarity = config.getfloat('checkbehavior','tresholdCosSimilarity')
+		self.thresholdCosSimilarity = rc.config.getfloat('checkbehavior','thresholdCosSimilarity')
 		#threshold for probability of relevant behavior occurence, necessary to filter one-time or rarely events
-		self.tresholdProbability = config.getfloat('checkbehavior','tresholdProbability')
+		self.thresholdProbability = rc.config.getfloat('checkbehavior','thresholdProbability')
 		
 		#emergency counter
 		self.emergency = 0
@@ -131,7 +126,7 @@ class Check(threading.Thread):
 				logging.info("Vectorvalues: %s" % db.getVectorValues(currentTimeValues[i],currentTimeValues[i+1],currTime, tolerance, weekend, historical))
 				probability = float(db.getVectorValues(currentTimeValues[i],currentTimeValues[i+1],currTime, tolerance, weekend, historical)) / savedDays
 				logging.info("Probalility: %s" % probability)
-				if(probability >= self.tresholdProbability):
+				if(probability >= self.thresholdProbability):
 					historicalVector[i] = probability
 			i += 1
 		return 	historicalVector
@@ -206,7 +201,7 @@ class Check(threading.Thread):
 			elif(numpy.linalg.norm(v_his) == 0): #Division durch Null!!! falls normalerweise kein Wasser verbraucht wird, Wasser aber trotzdem lange fließt, Alarm auslösen
 				similarity = 0
 				
-			if(similarity < self.tresholdCosSimilarity):
+			if(similarity < self.thresholdCosSimilarity):
 				self.emergency += 3
 		else:
 			self.emergency = 0 #alles ok, evtl. Katatstrophenvorbereitungen entschärfen

@@ -8,17 +8,13 @@
 """
 
 import sqlite3, os
-from ConfigParser import SafeConfigParser
-
-#read variables
-CONFIGFILE = "seheiah.cfg"
-config = SafeConfigParser()
-config.read(CONFIGFILE)
+#own
+import readConfig as rc
 
 class logDB(object):
 	#initialisieren
 	def __init__(self):
-		db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), config.get('logdb','database'))
+		db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logdb','database'))
 		#Datenbank verbinden
 		self.conn = sqlite3.connect(db, timeout=10)
 		#Cursor-Objekt, um mit DB zu intaragieren

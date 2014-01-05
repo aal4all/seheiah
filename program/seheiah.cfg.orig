@@ -30,9 +30,9 @@ observePeriod = 30
 #number of days to learn before seheiah decide about emergency case
 minObservedPeriod = 7
 #Value for accepted cosinus similarity
-tresholdCosSimilarity = 0.65
+thresholdCosSimilarity = 0.65
 
-tresholdProbability = 0.6
+thresholdProbability = 0.6
 
 [alarmcascade]
 #time to interrupt alarm
