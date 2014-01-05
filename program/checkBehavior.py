@@ -276,7 +276,7 @@ class Check(threading.Thread):
 			#Anzahl gespeicherter Tage
 			savedDays = db.getSavedDays(self.getCurrentDay(currTime),weekend)
 			#pro interval einmal Verhalten prüfen, falls Patient anwesend ist
-			if((0 < currTime % self.interval <= 25) and savedDays <= self.minObservedPeriod and self.getPresence() and not self.markerCheckBehavior):
+			if((0 < currTime % self.interval <= 25) and savedDays >= self.minObservedPeriod and self.getPresence() and not self.markerCheckBehavior):
 				self.checkBehavior(db)
 			#nach prüfung Marker wieder zurücksetzen
 			elif((currTime % self.interval > 25) and self.markerCheckBehavior):
