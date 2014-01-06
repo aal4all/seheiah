@@ -14,6 +14,7 @@ import logging
 import logdb
 import readConfig as rc
 import presence
+import playAudio
 
 class Monitor(threading.Thread):
 	#initialisieren
@@ -45,12 +46,16 @@ class Monitor(threading.Thread):
 		#presence
 		#per default assume, that patient is at home when activity is detected
 		self.presence = presence.Presence()
+		#audioplayback
+		self.pa = playAudio.playAudio()
 
 	#set start time, if a sensor is firing
 	def setStartTime(self):
 		self.starttime = int(time.time())
 		#if there is water flow or motion, the monitored senior is alive and home
 		self.presence.set(1)
+		mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','enableMonitoring')
+		self.pa.playMp3(mp3file)
 	
 	#returns starttime, it's important to detect long waterflow
 	def getStartTime(self):

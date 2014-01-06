@@ -46,15 +46,25 @@ import gst
 #own
 import readConfig as rc
 import presence
+import playAudio
 
 class GstSphinxCli(object):
 
-	def __init__(self): #hmm, lm, dic
+	def __init__(self): 
+		#hmm, lm, dic
+		"""
 		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','hmdir'))
 		lm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','lm'))
 		dic = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','dict'))
+		"""
+		hmm = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','hmdir')
+		lm = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','lm')
+		dic = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','dict')
 		self.presence = presence.Presence()
 		self.init_gst(hmm, lm, dic)
+		
+		#load playaudio
+		self.pa = playAudio.playAudio()
 		
 	def init_gst(self, hmm, lm, dic):
 		#pulsesrc
@@ -122,6 +132,8 @@ class GstSphinxCli(object):
 		#deactivate monitoring
 		if(u'SEHEIAH BYE' in hyp):
 			logging.info("SEHEIAH BYE BYE detected")
+			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','disableMonitoring')
+			self.pa.playMp3(mp3file)
 			self.presence.set(0)	
 
 	#sends message to alarm cascade

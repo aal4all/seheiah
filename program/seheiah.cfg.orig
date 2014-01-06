@@ -1,3 +1,7 @@
+[general]
+#absolute path to seheiah
+seheiahPath = /home/falko/seheiah/
+
 [logging]
 #loglevel = DEBUG = 10 | INFO = 20 | WARNING = 30 | ERROR = 40 | CRITICAL = 50
 #path to logfile (relative to path/seheiah)
@@ -54,8 +58,13 @@ mailpass = gehaim
 mailsubject = "Alarm: kontaktiere den Opa"
 #message
 mailmessage = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
-#audiofiles
-audioUnexpectedBehavior = audiofiles/de_unexpected_behavior.mp3
+
+[audiofiles]
+unexpectedBehavior = audiofiles/de_unexpected_behavior.mp3
+enableMonitoring = audiofiles/de_enable_monitoring.mp3
+disableMonitoring	=	audiofiles/de_disable_monitoring.mp3
+emergencyCallStart = audiofiles/de_start_emergency_call.mp3
+emergencyCallDone = audiofiles/de_emergency_call_done.mp3
 
 [speechrecognition]
 #Hidden Markov Model Dir (relative to path/seheiah)

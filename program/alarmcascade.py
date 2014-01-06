@@ -14,6 +14,7 @@ import threading
 import logging
 #eigene
 import readConfig as rc
+import playAudio
 
 class AlarmCascade(threading.Thread):
 	#initialisieren
@@ -35,6 +36,9 @@ class AlarmCascade(threading.Thread):
 		self.alarm = False
 		self.snapshotFilename = "" #name der Snaphot-Datei
 		self.messageSended = False #Marker, ob NAchricht bereits gesendet wurde
+		
+		#load audioplay
+		self.pa = playAudio.playAudio()
 
 
 	"""
@@ -74,11 +78,6 @@ class AlarmCascade(threading.Thread):
 				pass
 		"""
 
-	#spielt audiofile ab
-	def playAudioFile(self):
-		p = subprocess.Popen(['mpg321','-oalsa', '-ahw:0,0', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','audioUnexpectedBehavior'))])
-		p.communicate()		
-    
 	#does a beautyful picture of a room
 	def makeSnapshot(self):
 		#delegate the snapshot to subprocess. because its memoryintensive
@@ -146,16 +145,20 @@ class AlarmCascade(threading.Thread):
 	#Bild machen, angehörige informieren
 	def processAlarm(self):
 		if(self.messageSended == False):
-			print "processAlarm Action"
+			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallStart')
+			self.pa.playMp3(mp3file)
 			self.makeSnapshot()
 			self.sendEmailMessage()
+			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallDone')
+			self.pa.playMp3(mp3file)
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
 	def checkAlarm(self):
 		if((self.incomingAlarmTime > 0) and (int(time.time()) <= self.incomingAlarmTime + self.alarmValidateTime)):
 			#hier eine schöne Nachricht abspielen
-			print "unerwartetes Verhalten überprüfen"
-			self.playAudioFile()
+			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
+			self.pa.playMp3(mp3file)
+			time.sleep(10)
 		elif((self.incomingAlarmTime > 0) and (int(time.time()) > self.incomingAlarmTime + self.alarmValidateTime)):
 			self.alarm = True
 
