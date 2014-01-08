@@ -61,6 +61,12 @@ class GstSphinxCli(object):
 		lm = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','lm')
 		dic = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','dict')
 		self.presence = presence.Presence()
+		#commands for speech recognition
+		self.cmdHelp = unicode(rc.config.get('speechrecognition','cmdHelp'))
+		self.cmdAlarmOff = unicode(rc.config.get('speechrecognition','cmdAlarmOff'))
+		#self.cmdTest = unicode(rc.config.get('speechrecognition','cmdTest'))
+		self.cmdBye = unicode(rc.config.get('speechrecognition','cmdBye'))
+		
 		self.init_gst(hmm, lm, dic)
 		
 		#load playaudio
@@ -113,25 +119,24 @@ class GstSphinxCli(object):
 	def final_result(self, hyp, uttid):
 		""" handle final result `hyp' here """
 		#hyp is unicode string
-		#start Alarmcascade
 		logging.debug('pocketsphinx:' + hyp + ' erkannt')
-		if(u'SEHEIAH HILFE' in hyp):
-			logging.info("SEHEIAH HILFE detected")
-			print "SEHEIAH HILFE detected"
+		#start Alarmcascade
+		if(self.cmdHelp in hyp):
+			logging.info(self.cmdHelp.encode() + " detected")
 			self.messageToAlarmCascade('HILFE')
 			#send Alarm-message to socket
 		#start test
-		#if(u'SEHEIAH TEST' in hyp):
-			#logging.info("SEHEIAH TEST detected")
+		#if(self.cmdTest in hyp):
+			#logging.info(self.cmdTest.encode() + " detected")
 			#future project
 		#interrupt alarmcascade in case of unexpected behavior
-		if(u'SEHEIAH ALARM' in hyp):
-			logging.info("SEHEIAH ALARM AUS detected")
+		if(self.cmdAlarmOff in hyp):
+			logging.info(self.cmdAlarmOff.encode() + " detected")
 			self.messageToAlarmCascade('ALARM AUS')
 			#sends alarm aus
 		#deactivate monitoring
-		if(u'SEHEIAH BYE' in hyp):
-			logging.info("SEHEIAH BYE BYE detected")
+		if(self.cmdBye in hyp):
+			logging.info(self.cmdBye.encode() + " detected")
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','disableMonitoring')
 			self.pa.playMp3(mp3file)
 			self.presence.set(0)	

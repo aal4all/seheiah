@@ -75,3 +75,14 @@ lm = acoustic_model/etc/7646.lm
 dict = acoustic_model/etc/7646.dic
 #microphone device (webcam) for pulse audio, get it with "pact list sources"
 mic = alsa_input.usb-046d_HD_Webcam_C525_6691A520-00-C525.analog-mono
+#Commands
+#byebye: deactivates monitoring and avoids false alarms in case of absence
+cmdBye = SEHEIAH BYE BYE
+#turn on activates the monitoring in case of false positive recognition of byebye
+#cmd_turn_on =
+#alarm_off: interrupts alarm cascade
+cmdAlarmOff = SEHEIAH ALARM
+#help: trigger an alarm
+cmdHelp = SEHEIAH HILFE
+#test: returns state of monitoring
+cmdTest = SEHEIAH TEST
