@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 03.01.2014
+@Date 11.01.2014
 @brief queries database and checks cosinus similarity
 """
 
@@ -14,6 +14,7 @@ import logging #logdatei
 import logdb
 import readConfig as rc
 import presence
+import playAudio
 
 class Check(threading.Thread):
 	def __init__(self, mon):
@@ -42,6 +43,9 @@ class Check(threading.Thread):
 		self.markerCheckDelete = False #wurden alte Werte korrekt gelöscht?
 		
 		self.presence = presence.Presence()
+		
+		#load playaudio
+		self.pa = playAudio.playAudio()
 		
 	"""
 	ermittelt Zeiten für Vektoren
@@ -244,8 +248,14 @@ class Check(threading.Thread):
 			weekend = self.getWeekend(currTime)
 			#Anzahl gespeicherter Tage
 			savedDays = db.getSavedDays(self.getCurrentDay(currTime),weekend)
+			#check, if patient at home
+			patientPresent = self.presence.get()
+			#if patient not at home, play all 5 minutes a small file to remember, that monitoring is disabled and avoid unintentional turn off
+			if ((0 < currTime % 300 < 5) and not patientPresent ):
+				mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','monitoringOff')
+				self.pa.playMp3(mp3file)
 			#pro interval einmal Verhalten prüfen, falls Patient anwesend ist
-			if((0 < currTime % self.interval <= 25) and savedDays >= self.minObservedPeriod and self.presence.get() and not self.markerCheckBehavior):
+			if((0 < currTime % self.interval <= 25) and savedDays >= self.minObservedPeriod and patientPresent and not self.markerCheckBehavior):
 				self.checkBehavior(db)
 			#nach prüfung Marker wieder zurücksetzen
 			elif((currTime % self.interval > 25) and self.markerCheckBehavior):

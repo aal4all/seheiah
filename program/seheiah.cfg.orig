@@ -65,6 +65,8 @@ enableMonitoring = audiofiles/de_enable_monitoring.mp3
 disableMonitoring	=	audiofiles/de_disable_monitoring.mp3
 emergencyCallStart = audiofiles/de_start_emergency_call.mp3
 emergencyCallDone = audiofiles/de_emergency_call_done.mp3
+#file to play, if patient isn't at home
+monitoringOff = audiofiles/halleluja.mp3
 
 [speechrecognition]
 #Hidden Markov Model Dir (relative to path/seheiah)
