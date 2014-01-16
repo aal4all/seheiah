@@ -3,11 +3,11 @@
 
 """
 @author Falko Benthin
-@Date 02.09.2013
+@Date 17.01.2014
 @brief database operations for activity monitor
 """
 
-import sqlite3, os
+import sqlite3, os, time
 #own
 import readConfig as rc
 
@@ -23,13 +23,19 @@ class logDB(object):
 		
 	#schreibt neue Datensätze in DB
 	def add_log(self,starttime,duration):
-		values = (starttime,duration) #werte für db
+		#tests, if midnight occurs considering timezones
+		if((starttime - time.timezone) / 86400 < (starttime - time.timezone + duration) / 86400):
+			secondDuration = int(starttime - time.timezone + duration) % 86400
+			secondStarttime = int(starttime + duration) - secondDuration
+			duration = duration - secondDuration - 1
+			values = [(starttime,duration), (secondStarttime,secondDuration)]
+		else:
+			values = [(starttime,duration)] #werte für db
 		try:
-			self.cursor.execute("INSERT INTO activity_log (starttime, duration) VALUES (?,?);", values)
+			self.cursor.executemany("INSERT INTO activity_log (starttime, duration) VALUES (?,?);", values)
 			self.conn.commit()
-		except sqlite.OperationalError:
+		except sqlite3.OperationalError:
 			time.sleep(3)
-			retry
 	
 	#fragt ab, wie viele Tage bereits in DB gespeichert wurden
 	def getSavedDays(self,currentDay,weekend):
@@ -41,9 +47,8 @@ class logDB(object):
 		try:
 			self.cursor.execute("SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE " + sql_weekend + "(starttime/86400) < ?;", (currentDay,))
 			savedDays = int(self.cursor.fetchone()[0]) #nur tagesanzahl interessant
-		except sqlite.OperationalError:
+		except sqlite3.OperationalError:
 			time.sleep(3)
-			retry
 		return savedDays
 	
 	
@@ -84,9 +89,8 @@ class logDB(object):
 		try:
 			self.cursor.execute(sql, values)
 			frequency = int(self.cursor.fetchone()[0]) #anzahl erfasster Activitäten im definierten Zeitraum
-		except sqlite.OperationalError:
+		except sqlite3.OperationalError:
 			time.sleep(3)
-			retry
 		return frequency
 	
 	
@@ -103,10 +107,25 @@ class logDB(object):
 		try:
 			self.cursor.execute("DELETE FROM activity_log WHERE " + sql_weekend + "starttime/86400 = (SELECT MIN(starttime/86400) FROM activity_log);")
 			self.conn.commit()
-		except sqlite.OperationalError:
+		except sqlite3.OperationalError:
 			time.sleep(3)
-			retry
 	
+	#visualisation
+	def getActivities(self,weekend):
+		#DB-Abfrage anpassen, je nachdem ob WE ist oder nicht
+		if weekend: #Wochenende
+			sql_weekend = " strftime('%w',starttime,'unixepoch','localtime') NOT BETWEEN '1' AND '5'"
+		else: #Wochentag
+			sql_weekend = " strftime('%w',starttime,'unixepoch','localtime') BETWEEN '1' AND '5'"
+		#sql = "SELECT date(starttime,'unixepoch','localtime'), time(starttime,'unixepoch','localtime'), date(starttime+duration,'unixepoch','localtime'), time(starttime+duration,'unixepoch','localtime') FROM activity_log WHERE " + sql_weekend + " ;"
+		sql = "SELECT starttime, starttime+duration FROM activity_log WHERE " + sql_weekend + " ;"
+		try:
+			self.cursor.execute(sql)
+			activities = self.cursor.fetchall()
+		except sqlite3.OperationalError:
+			time.sleep(3)
+		return activities
 		
 	def closeDB(self):
 		self.conn.close()
+		
