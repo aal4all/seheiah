@@ -124,15 +124,15 @@ class Check(threading.Thread):
 		
 		#Anzahl bereits gespeicherter Tage (wochentage oder Wochenenden) abfragen
 		savedDays = db.getSavedDays(self.getCurrentDay(currTime),weekend)
-		logging.info("SavedDays: %s" % savedDays)
+		logging.debug("SavedDays: %s" % savedDays)
 		historicalVector = numpy.zeros(self.intervalQuantum,float) #Numpy-Array mit Nullen gefüllt
 		i = 0
 		while i < self.intervalQuantum:
 			if(savedDays > 0):
 				#Wahrscheinlichkeit, dass ein Verhalten innerhalb der Toleranz auftritt
-				logging.info("Vectorvalues: %s" % db.getVectorValues(currentTimeValues[i],currentTimeValues[i+1],currTime, tolerance, weekend, historical))
+				logging.debug("Vectorvalues: %s" % db.getVectorValues(currentTimeValues[i],currentTimeValues[i+1],currTime, tolerance, weekend, historical))
 				probability = float(db.getVectorValues(currentTimeValues[i],currentTimeValues[i+1],currTime, tolerance, weekend, historical)) / savedDays
-				logging.info("Probalility: %s" % probability)
+				logging.debug("Probalility: %s" % probability)
 				if(probability >= self.thresholdProbability):
 					historicalVector[i] = probability
 			i += 1
@@ -159,7 +159,7 @@ class Check(threading.Thread):
 		#wenn ja, könnten noch werte in der DB fehlen und Vektor muss angepasst werden
 		sensorIsFiring = self.mon.getStartTime()
 		if sensorIsFiring > 0:
-			logging.info("sensor feuert: %s" % sensorIsFiring)
+			logging.debug("sensor feuert: %s" % sensorIsFiring)
 			j = 0
 			while j < self.intervalQuantum:
 				#wenn ein Zeitwert j>0 kleiner als wert j=0 ist, erfolgte ein Tageswechsel (0:00) und entsprechender Wert muss erhöht werden
@@ -196,7 +196,7 @@ class Check(threading.Thread):
 		geht es offensichtlich gut
 		"""
 		l_v_curr = numpy.linalg.norm(v_curr)
-		logging.info("aktueller Vektor: %s La:nge: %s" % (v_curr, l_v_curr))
+		logging.debug("aktueller Vektor: %s La:nge: %s" % (v_curr, l_v_curr))
 		if(l_v_curr == 0): #kein Wasserberbrauch
 			if(numpy.linalg.norm(v_his) !=  l_v_curr): #wenn normalerweise Wasser verbraucht wird ...
 				self.emergency += 1 #Alarmwert hochzählen
@@ -212,7 +212,7 @@ class Check(threading.Thread):
 				self.emergency += 3
 		else:
 			self.emergency = 0 #alles ok, evtl. Katatstrophenvorbereitungen entschärfen
-		logging.info("Alarm: %s" % self.emergency)
+		logging.debug("Alarm: %s" % self.emergency)
 		if(self.emergency >= 9): #Alarm auslösen
 			logging.info("UNEXPECTED BEHAVIOR")
 			self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")
