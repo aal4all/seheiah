@@ -110,6 +110,20 @@ class logDB(object):
 		except sqlite3.OperationalError:
 			time.sleep(3)
 	
+	"""
+	set times of absence
+	it's neccessary to get right number of events and probabilities
+	for example, if there recorded 30 days, but survived person goes out everey second day in evening, the maximal probability of an event is 50 %, with unoccured absence. When we can remove absence times from all days, probalitity of an event should be around 100 percent
+	"""
+	def addAbsence(self,starttime,endtime):
+		#tests, if midnight occurs considering timezones
+		values = (starttime,endtime) #werte für db
+		try:
+			self.cursor.execute("INSERT INTO absence (startAbsence, endAbsence) VALUES (?,?);", values)
+			self.conn.commit()
+		except sqlite3.OperationalError,e:
+			time.sleep(3)
+	
 	#visualisation
 	def getActivities(self,weekend):
 		#DB-Abfrage anpassen, je nachdem ob WE ist oder nicht

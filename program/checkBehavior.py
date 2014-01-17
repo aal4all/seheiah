@@ -13,7 +13,7 @@ import logging #logdatei
 #own
 import logdb
 import readConfig as rc
-import presence
+import absence
 import playAudio
 
 class Check(threading.Thread):
@@ -42,7 +42,7 @@ class Check(threading.Thread):
 		self.markerCheckBehavior = False #wurde verhalten im interval abgefragt?
 		self.markerCheckDelete = False #wurden alte Werte korrekt gelöscht?
 		
-		self.presence = presence.Presence()
+		self.absence = absence.Absence()
 		
 		#load playaudio
 		self.pa = playAudio.playAudio()
@@ -249,7 +249,7 @@ class Check(threading.Thread):
 			#Anzahl gespeicherter Tage
 			savedDays = db.getSavedDays(self.getCurrentDay(currTime),weekend)
 			#check, if patient at home
-			patientPresent = self.presence.get()
+			patientPresent = not self.absence.get()
 			#if patient not at home, play all 5 minutes a small file to remember, that monitoring is disabled and avoid unintentional turn off
 			if ((0 < currTime % 300 < 5) and not patientPresent ):
 				mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','monitoringOff')

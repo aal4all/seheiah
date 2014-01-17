@@ -45,7 +45,7 @@ gobject.threads_init()
 import gst
 #own
 import readConfig as rc
-import presence
+import absence
 import playAudio
 
 class GstSphinxCli(object):
@@ -60,7 +60,7 @@ class GstSphinxCli(object):
 		hmm = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','hmdir')
 		lm = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','lm')
 		dic = rc.config.get('general','seheiahPath') + rc.config.get('speechrecognition','dict')
-		self.presence = presence.Presence()
+		self.absence = absence.Absence()
 		#commands for speech recognition
 		self.cmdHelp = unicode(rc.config.get('speechrecognition','cmdHelp'))
 		self.cmdAlarmOff = unicode(rc.config.get('speechrecognition','cmdAlarmOff'))
@@ -76,6 +76,7 @@ class GstSphinxCli(object):
 		#pulsesrc
 		#self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#alsasrc
+		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! volume volume=0.6 ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#lm=' + lm + ' dict=' + dic + ' hmm=' + hmm + ' 
 		asr = self.pipeline.get_by_name('asr')
@@ -139,7 +140,7 @@ class GstSphinxCli(object):
 			logging.info(self.cmdBye.encode() + " detected")
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','disableMonitoring')
 			self.pa.playMp3(mp3file)
-			self.presence.set(0)	
+			self.absence.set(int(time.time()))	
 
 	#sends message to alarm cascade
 	#future todo:DRY

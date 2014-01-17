@@ -13,7 +13,7 @@ import logging
 #own
 import logdb
 import readConfig as rc
-import presence
+import absence
 import playAudio
 
 class Monitor(threading.Thread):
@@ -43,9 +43,9 @@ class Monitor(threading.Thread):
 		self.starttime = 0
 		
 		
-		#presence
+		#absence
 		#per default assume, that patient is at home when activity is detected
-		self.presence = presence.Presence()
+		self.absence = absence.Absence()
 		#audioplayback
 		self.pa = playAudio.playAudio()
 
@@ -53,8 +53,8 @@ class Monitor(threading.Thread):
 	def setStartTime(self):
 		self.starttime = int(time.time())
 		#if there is water flow or motion, the monitored senior is alive and home
-		if not (self.presence.get()):
-			self.presence.set(1)
+		if(self.absence.get()):
+			self.absence.set(0)
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','enableMonitoring')
 			self.pa.playMp3(mp3file)
 	
