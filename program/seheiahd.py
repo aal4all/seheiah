@@ -51,7 +51,9 @@ class Seheiah(object):
 		
 		while True:
 			time.sleep(0.01)
-
+		
+		pocketsphinx.quit()
+		
 app = Seheiah()
 daemon_runner = runner.DaemonRunner(app)
 daemon_runner.do_action()

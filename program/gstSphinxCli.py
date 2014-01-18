@@ -76,8 +76,8 @@ class GstSphinxCli(object):
 		#pulsesrc
 		#self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#alsasrc
-		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! volume volume=0.6 ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
-		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
+		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! volume volume=' + rc.config.get('speechrecognition','micVol') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
+		#self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#lm=' + lm + ' dict=' + dic + ' hmm=' + hmm + ' 
 		asr = self.pipeline.get_by_name('asr')
 		asr.connect('partial_result', self.asr_partial_result)
@@ -160,6 +160,8 @@ class GstSphinxCli(object):
 		else:
 			logging.error("socket /tmp/seheiah_alarm.sock doesn't exists")
 			
+	def quit(self):
+		gobject.MainLoop().quit()
 	
 	def run(self):
 		logging.info("Thread Pocketsphinx started")
