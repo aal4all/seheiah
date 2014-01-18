@@ -140,7 +140,8 @@ class GstSphinxCli(object):
 			logging.info(self.cmdBye.encode() + " detected")
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','disableMonitoring')
 			self.pa.playMp3(mp3file)
-			self.absence.set(int(time.time()))	
+			if not (self.absence.get()):
+				self.absence.set(int(time.time()))	
 
 	#sends message to alarm cascade
 	#future todo:DRY
