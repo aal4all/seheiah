@@ -3,12 +3,12 @@
 $CFG_VERBOSE = 1;		# Determines how much goes to the screen.
 
 # These are filled in at configuration time
-$CFG_DB_NAME = "7646";
+$CFG_DB_NAME = "seheiah_de";
 # Experiment name, will be used to name model files and log files
 $CFG_EXPTNAME = "$CFG_DB_NAME";
 
 # Directory containing SphinxTrain binaries
-$CFG_BASE_DIR = "/home/falko/acoustic_model";
+$CFG_BASE_DIR = "/home/falko/seheiah/acoustic_model";
 $CFG_SPHINXTRAIN_DIR = "/usr/local/lib/sphinxtrain";
 $CFG_BIN_DIR = "/usr/local/libexec/sphinxtrain";
 $CFG_SCRIPT_DIR = "/usr/local/lib/sphinxtrain/scripts";
@@ -73,6 +73,7 @@ $CFG_LANGUAGEWEIGHT = "11.5";
 $CFG_BEAMWIDTH      = "1e-100";
 $CFG_WORDBEAM       = "1e-80";
 $CFG_LANGUAGEMODEL  = "$CFG_LIST_DIR/$CFG_DB_NAME.lm.DMP";
+#$CFG_LANGUAGEMODEL  = "$CFG_LIST_DIR/$CFG_DB_NAME.lm";
 $CFG_WORDPENALTY    = "0.2";
 
 # Lattice pruning variables
@@ -258,8 +259,8 @@ $DEC_CFG_RESULT_DIR     = "$CFG_BASE_DIR/result";
 # This variables, used by the decoder, have to be user defined, and
 # may affect the decoder output
 
-#$DEC_CFG_LANGUAGEMODEL  = "$CFG_BASE_DIR/etc/${CFG_DB_NAME}.lm.DMP";
-$DEC_CFG_LANGUAGEMODEL  = "$CFG_BASE_DIR/etc/${CFG_DB_NAME}.lm";
+$DEC_CFG_LANGUAGEMODEL  = "$CFG_BASE_DIR/etc/${CFG_DB_NAME}.lm.DMP";
+#$DEC_CFG_LANGUAGEMODEL  = "$CFG_BASE_DIR/etc/${CFG_DB_NAME}.lm";
 $DEC_CFG_LANGUAGEWEIGHT = "10";
 $DEC_CFG_BEAMWIDTH = "1e-80";
 $DEC_CFG_WORDBEAM = "1e-40";
