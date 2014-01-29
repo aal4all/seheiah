@@ -18,6 +18,7 @@ for I in `seq $2 $3`;
 do
 	aplay beep-02.wav
 	echo "$BASENAME$I.wav"
+	sleep 0.3
 	arecord -r 16000 -D hw:1,0 -d 5 -f S16_LE -c 1 $BASENAME$I.wav
 done
 

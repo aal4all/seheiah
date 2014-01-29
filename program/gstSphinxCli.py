@@ -76,8 +76,7 @@ class GstSphinxCli(object):
 		#pulsesrc
 		#self.pipeline = gst.parse_launch('pulsesrc device="' + config.get('speechrecognition','mic') + '" ! audioconvert ! audioresample ! vader name=vad auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#alsasrc
-		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! volume volume=' + rc.config.get('speechrecognition','micVol') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
-		#self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
+		self.pipeline = gst.parse_launch('alsasrc device=' + rc.config.get('speechrecognition','mic') + ' ! queue ! audioconvert ! audioresample ! vader name=vader auto-threshold=true ! pocketsphinx name=asr ! fakesink dump=1')
 		#lm=' + lm + ' dict=' + dic + ' hmm=' + hmm + ' 
 		asr = self.pipeline.get_by_name('asr')
 		asr.connect('partial_result', self.asr_partial_result)

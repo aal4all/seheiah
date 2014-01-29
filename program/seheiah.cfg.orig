@@ -24,18 +24,19 @@ pirGPIO = 7
 
 
 [checkbehavior]
-#intervals to considering in seconds
+#intervals to considering in seconds, it should divide 86400
 interval = 300
 #tolerance, in which an activity event (in this case water flow) has to occure
 #means an regulary event can fire in an timeslot +/- (tolerance * interval) seconds 
-intervalquantum = 3
+toleranceIntervals = 3
 #number of recorded days, per workdays and free days
 observePeriod = 30
 #number of days to learn before seheiah decide about emergency case
 minObservedPeriod = 7
+
+[classification]
 #Value for accepted cosinus similarity
 thresholdCosSimilarity = 0.65
-
 thresholdProbability = 0.6
 
 [alarmcascade]
@@ -77,8 +78,6 @@ lm = acoustic_model/etc/7646.lm
 dict = acoustic_model/etc/7646.dic
 #microphone device (webcam) for pulse audio, get it with "pact list sources"
 mic = alsa_input.usb-046d_HD_Webcam_C525_6691A520-00-C525.analog-mono
-#mic volume, experimental, try to reduce false recognized commands, 0.0 to 1.0 in steps of 0.1
-micVol = 0.5
 #Commands
 #byebye: deactivates monitoring and avoids false alarms in case of absence
 cmdBye = SEHEIAH BYE BYE

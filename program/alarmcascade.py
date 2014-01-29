@@ -49,16 +49,19 @@ class AlarmCascade(threading.Thread):
 		if((message == "UNEXPECTED BEHAVIOR") and (self.incomingAlarmTime == 0)):
 			print "perhaps Alarm"
 			self.incomingAlarmTime = int(time.time())
+			self.messageSended = False
 		#für den Fall eines eindeutigen Notfalls, etwa Hilferuf von Spracherkennung
 		elif(message == "HILFE"):
 			print "HILFE !!!"
 			self.alarm = True
+			self.messageSended = False
 			#print "self.alarm=",self.alarm
 		elif(message == "ALARM AUS"):
 			try:
 				#self.incomingAlarmTime = 0
 				self.alarm = False
 				self.messageSended = False
+				self.incomingAlarmTime = 0
 			except ValueError:	
 				pass
 		"""
@@ -151,6 +154,7 @@ class AlarmCascade(threading.Thread):
 			self.sendEmailMessage()
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallDone')
 			self.pa.playMp3(mp3file)
+			self.messageSended = True
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
 	def checkAlarm(self):
