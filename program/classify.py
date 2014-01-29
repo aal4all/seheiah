@@ -8,6 +8,7 @@
 """
 
 import numpy as np
+#import scipy as sp
 import logging
 import readConfig as rc
 
@@ -34,13 +35,13 @@ class Classify():
 		"""
 		lenghtV = np.linalg.norm(recentBehavior)
 		logging.debug("aktueller Vektor: %s La:nge: %s" % (recentBehavior, lenghtV))
-		if(lenghtV == 0 or lenghtV == np.sqrt(3.0)):
+		if(lenghtV == 0.0 or lenghtV == np.sqrt(3.0)):
 			return True
 		else:
 			return False
 	
 	"""
-	check, if usually bahavior was different from recent
+	check, if usually bahavior was different from recent, clean ans smooth values first
 	@param numpy array  recentBehavior
 	@param numpy array usuallyBehavior
 	return bool
@@ -50,21 +51,26 @@ class Classify():
 		#clean data, remove noise, means everything < thresholdProbability, because this were rare events 
 		usuallyBehavior[usuallyBehavior < thresholdProbability] = 0.0
 		usuallyBehavior[usuallyBehavior >= thresholdProbability] = 1.0
-		lenghtV = np.linalg.norm(recentBehavior)
-		similarity = 0
-		for behavior in usuallyBehavior:
-			if(lenghtV == 0):
-				if(np.linalg.norm(behavior) != lenghtV): #wenn normalerweise Wasser verbraucht wird ...
-					return True #Alarmwert
-			else:
-				if(np.linalg.norm(behavior) > 0):
-					similarity = max(self.cosSimilarity(recentBehavior,behavior), similarity) #cos(v_curr,v_his)
-					#Cosinusähnlichkeit in eigene Methode
-					#Distanz ebenfalls
-		if(similarity < self.thresholdCosSimilarity):
-			return True
+		lenghtRB = np.linalg.norm(recentBehavior)
+		result = False	#per default thers no strange behavior	
+		#checks, if senior normally has water consumption
+		if(lenghtRB == 0.0):
+			norms = []
+			for behavior in usuallyBehavior:
+				norms.append(np.linalg.norm(behavior))
+			if(max(norms) > lenghtRB):
+				result = True
+		#otherwise checks, if senior normally has water consumption over long duration		
 		else:
-			return False
+			similarity = [] # otherwise
+			for behavior in usuallyBehavior:
+				if(np.linalg.norm(behavior) > 0.0):
+					similarity.append(self.cosSimilarity(recentBehavior,behavior))
+				else: #avoid division through zero
+					similarity.append(0.0)
+			if(max(similarity) < self.thresholdCosSimilarity):
+				result = True
+		return result
 
 	
 	"""
@@ -75,6 +81,7 @@ class Classify():
 	"""
 	def cosSimilarity(self, vector1, vector2):
 		return np.dot(vector1,vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2))
+		#return sp.spatial.distance.cosine(vector1, vector2)
 	
 	"""
 	calculate euclidian distance between two points

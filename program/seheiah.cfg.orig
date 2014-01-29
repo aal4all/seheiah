@@ -80,12 +80,12 @@ dict = acoustic_model/etc/7646.dic
 mic = alsa_input.usb-046d_HD_Webcam_C525_6691A520-00-C525.analog-mono
 #Commands
 #byebye: deactivates monitoring and avoids false alarms in case of absence
-cmdBye = SEHEIAH BYE BYE
+cmdBye = Seheiah tsch..ss
 #turn on activates the monitoring in case of false positive recognition of byebye
 #cmd_turn_on =
 #alarm_off: interrupts alarm cascade
-cmdAlarmOff = SEHEIAH ALARM
+cmdAlarmOff = Seheiah Alarm
 #help: trigger an alarm
-cmdHelp = SEHEIAH HILFE
+cmdHelp = Seheiah Hilfe
 #test: returns state of monitoring
-cmdTest = SEHEIAH TEST
+cmdTest = Seheiah Test

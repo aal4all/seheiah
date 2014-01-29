@@ -91,6 +91,7 @@ class Check(threading.Thread):
 		#if conspicuous
 		if(self.classify.suspiciousBehavior(recentBehavior)):
 			usuallyBehavior = self.getUsuallyVector(db,currTime)
+			
 			if(self.classify.behaviorDiffCos(recentBehavior, usuallyBehavior)):
 				self.emergency += 1
 				print recentBehavior
@@ -99,7 +100,7 @@ class Check(threading.Thread):
 			else:
 				self.emergency = 0
 		
-		if(self.emergency >= self.toleranceIntervals * 3): #Alarm auslösen
+		if(self.emergency >= (self.toleranceIntervals * 2) + 1): #Alarm auslösen
 			logging.info("UNEXPECTED BEHAVIOR")
 			self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
 			#reset alarm counter
@@ -136,6 +137,7 @@ class Check(threading.Thread):
 			
 			if (0 < currTime % self.interval <= self.interval/30):
 				#at least on time per interval write monitored day to database, to avoid, that it will be forgotten, because seheiah is'nt running or switched on at false time
+				print "db.lastrec ", db.getLastDayRecord(), "today ", (currTime - currTime%86400)
 				if not (db.getLastDayRecord() == (currTime - currTime%86400)):
 					try:
 						#when insert day-record, also create probabilities
@@ -153,17 +155,6 @@ class Check(threading.Thread):
 			#nach prüfung Marker wieder zurücksetzen
 			elif((currTime % self.interval > self.interval/10) and self.markerCheckBehavior):
 				self.markerCheckBehavior = False
-			
-			#at least on time per interval write monitored day to database, to avoid, that it will be forgotten, because seheiah is'nt running or switched on at false time
-			if(30 < currTime % self.interval <= 40):
-				#check, if for today already exists an entry
-				#if not, build Probabilities and add day record
-				if not (db.getLastDayRecord == (currTime - currTime%86400)):
-					try:
-						db.createProbabilities()
-						db.addDayRecord(currTime)
-					except:
-						logging.error("Impossibile to create probabilities or insert day record")
 				
 			#einmal pro Tag Datenbank von alten Einträgen befreien
 			if((0 < currTime % 86400 <= 600) and not self.markerCheckDelete):
