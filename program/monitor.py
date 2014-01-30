@@ -38,13 +38,15 @@ class Monitor(threading.Thread):
 			else:
 				self.pigpio = pigpio
 				self.pirGPIO = rc.config.getint('monitor','pirGPIO')
+				self.pirFunc = rc.config.getint('monitor','pirFunc')
 				self.pigpio.start()
 				self.pigpio.set_mode(self.pirGPIO,  self.pigpio.INPUT)
+				if (self.pirFunc == 2):
+					self.pirStarttime = 0
 		self.starttime = 0
 		
 		
-		#absence
-		#per default assume, that patient is at home when activity is detected
+		#read absence
 		self.absence = absence.Absence()
 		#audioplayback
 		self.pa = playAudio.playAudio()
@@ -77,7 +79,14 @@ class Monitor(threading.Thread):
 			try:
 				inputAsInteger=int(serialFromArduino.readline())
 				if(inputAsInteger >= self.sensor_threshold_min):
-					self.setStartTime()
+					"""
+					set starttime only, if 
+					#	there is no pir
+					#	or pir as supporter
+					# or pir as filter, which was firing in previos 2 minutes
+					"""
+					if not (self.pir) or (self.pir and self.pirFunc == 1) or (self.pir and self.pirFunc == 2 and (int(time.time()) - self.pirStarttime < 120)) :
+						self.setStartTime()
 					#while flow sensor is firing
 					while not (inputAsInteger < self.sensor_threshold_min):
 						time.sleep(0.5)
@@ -90,19 +99,23 @@ class Monitor(threading.Thread):
 					pirState = self.pigpio.read(self.pirGPIO)
 					if(pirState == 1):
 						#if pir is in the area, where the subject is staying most of the time, you need another variable than  
-						self.setStartTime()
+						if (self.pirFunc == 1): #if Pir is supporter
+							self.setStartTime()
+						else:	#if Pir ist filter
+							self.pirStarttime = int(time.time()) #set starttime of pir
+							print "pirStart=",self.pirStarttime
 						#while pir is firing
-						while not (pirState == 0):
+						while not (pirState == 0) and (self.pirFunc == 1): #only go in while loop, if pir is supporter
 							time.sleep(0.5)
 							pirState = self.pigpio.read(self.pirGPIO)
 				except Exception, e:
 					logging.error(str(e))
 					
-			#Zeit berechnen, die Wasser entnommen wurde (min 1 sek)
+			#time of water consumption (min 2 sek)
 			if(self.starttime > 0):
 				duration = (int(time.time())) - self.starttime
-				#schreibt Werte in DB, wenn mindestens 3 Sekunden Wasser entnommen wurde
-				if(duration > 3):
+				#writes waterconsumption or pir sensor firing in database, if duration is more than two seconds
+				if(duration >= 2):
 					db.add_log(self.starttime,duration)
 					
 		#close database

@@ -50,9 +50,10 @@ class Seheiah(object):
 		pocketsphinx.run()
 		
 		while True:
-			time.sleep(0.01)
-		
-		pocketsphinx.quit()
+			try:
+				time.sleep(0.01)
+			except:
+				pocketsphinx.quit()
 		
 app = Seheiah()
 daemon_runner = runner.DaemonRunner(app)

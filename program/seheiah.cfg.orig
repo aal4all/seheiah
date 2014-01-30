@@ -21,7 +21,9 @@ sensor_threshold_min = 10
 pir = false
 #Pir GPIO to use on Pi
 pirGPIO = 7
-
+#PIR can be a filter or supporter. As supporter its like a second flow-sensor, as filter it checks, if there was some motion in the two minutes before waterflow. so you can avoid, that Seheiah detects consumption from dishing cleaners or water machines as human consumption
+# allowed Values: 1 = supporter, 2 = filter
+pirFunc = 1
 
 [checkbehavior]
 #intervals to considering in seconds, it should divide 86400
