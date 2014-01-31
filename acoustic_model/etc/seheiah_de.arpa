@@ -165,8 +165,8 @@ ngram 3=505
 -2.7236 etwas	-0.0137
 -2.7236 euch	0.0708
 -2.7236 fest	0.0708
--2.7236 fünf	-0.0137
--2.7236 für	-0.0137
+-2.7236 fuenf	-0.0137
+-2.7236 fuer	-0.0137
 -2.7236 ganz	-0.0137
 -2.7236 ganze	0.0708
 -2.7236 ganzen	0.0708
@@ -178,20 +178,20 @@ ngram 3=505
 -2.7236 gemacht	0.0708
 -2.4208 genau	-0.0121
 -2.4208 gewesen	-0.0016
--2.7236 groß	-0.0096
--2.7236 große	-0.0137
--2.7236 großen	-0.0137
+-2.7236 gross	-0.0096
+-2.7236 grosse	-0.0137
+-2.7236 grossen	-0.0137
 -2.7236 gut	-0.0137
 -2.7236 habe	-0.0137
 -2.7236 haben	-0.0137
+-2.7236 haette	-0.0137
 -2.7236 hat	-0.0137
 -2.7236 hatte	-0.0137
 -2.7236 hatten	-0.0137
--2.7236 heißen	0.0708
+-2.7236 heissen	0.0708
 -2.7236 heute	-0.0137
 -2.7236 hier	-0.0121
 -2.7236 hundert	-0.0137
--2.7236 hätte	-0.0137
 -2.2447 ich	-0.0121
 -2.7236 ihm	0.0708
 -2.7236 ihn	-0.0137
@@ -213,15 +213,15 @@ ngram 3=505
 -2.7236 keine	-0.0137
 -2.7236 klein	0.0708
 -2.4208 knapp	-0.0121
+-2.7236 koennen	-0.0137
 -2.7236 kommen	0.0708
 -2.7236 konnte	-0.0137
--2.7236 können	-0.0137
--2.7236 künftig	-0.0137
+-2.7236 kuenftig	-0.0137
+-2.7236 laesst	-0.0137
 -2.7236 lang	-0.0129
 -2.4208 lange	-0.0121
 -2.7236 lassen	0.0708
 -2.7236 liegen	0.0708
--2.7236 lässt	-0.0137
 -2.7236 machen	0.0708
 -2.7236 macht	-0.0137
 -2.7236 man	-0.0137
@@ -232,10 +232,10 @@ ngram 3=505
 -2.7236 mich	-0.0096
 -2.7236 mir	0.0708
 -2.7236 mit	-0.0137
+-2.7236 moechte	-0.0137
+-2.7236 moeglich	0.0708
+-2.7236 muessen	-0.0096
 -2.7236 muss	-0.0129
--2.7236 möchte	-0.0137
--2.7236 möglich	0.0708
--2.7236 müssen	-0.0096
 -2.7236 nach	-0.0129
 -2.7236 neu	-0.0129
 -2.7236 neun	0.0708
@@ -280,7 +280,8 @@ ngram 3=505
 -2.7236 stehen	0.0708
 -2.7236 tausend	0.0708
 -2.7236 test	0.0708
--2.7236 tschüss	0.0708
+-2.7236 tschuess	0.0708
+-2.7236 ueber	-0.0137
 -2.7236 um	-0.0129
 -1.9437 und	-0.0071
 -2.7236 uns	-0.0137
@@ -292,13 +293,15 @@ ngram 3=505
 -2.7236 vom	-0.0137
 -2.7236 von	-0.0137
 -2.7236 vor	-0.0129
+-2.7236 waehrend	-0.0137
+-2.7236 waere	-0.0104
 -2.7236 war	0.0708
 -2.7236 waren	-0.0137
 -2.7236 was	-0.0137
 -2.7236 weil	-0.0087
+-2.7236 weiss	-0.0137
 -2.7236 weit	0.0708
 -2.7236 weiter	0.0708
--2.7236 weiß	-0.0137
 -2.7236 welche	-0.0137
 -2.7236 welcher	-0.0137
 -2.7236 welches	-0.0129
@@ -315,11 +318,9 @@ ngram 3=505
 -2.7236 wohl	-0.0137
 -2.7236 wollen	-0.0137
 -2.7236 worden	-0.0137
+-2.4208 wuerde	-0.0087
 -2.7236 wurde	-0.0137
 -2.7236 wurden	0.0708
--2.7236 während	-0.0137
--2.7236 wäre	-0.0104
--2.4208 würde	-0.0087
 -2.7236 zehn	-0.0137
 -2.7236 zu	-0.0137
 -2.7236 zum	-0.0137
@@ -327,8 +328,7 @@ ngram 3=505
 -2.7236 zwar	-0.0129
 -2.4208 zwei	-0.0121
 -2.7236 zwischen	-0.0137
--2.7236 zwölf	0.0708
--2.7236 über	-0.0137
+-2.7236 zwoelf	0.0708
 
 \2-grams:
 -0.0046 </s> <s> 0.0024
@@ -362,16 +362,16 @@ ngram 3=505
 -3.4604 <s> eins 0.0047
 -3.4604 <s> etwas 0.0047
 -3.4604 <s> genau -0.0026
--3.4604 <s> groß 0.0047
+-3.4604 <s> gross 0.0047
 -3.4604 <s> habe 0.0047
+-3.4604 <s> haette 0.0047
 -3.4604 <s> hundert 0.0047
--3.4604 <s> hätte 0.0047
 -1.5006 <s> ich 0.0047
 -3.4604 <s> im 0.0047
 -3.4604 <s> jetzt 0.0047
 -3.4604 <s> kein 0.0047
 -3.4604 <s> keine 0.0047
--3.4604 <s> künftig 0.0047
+-3.4604 <s> kuenftig 0.0047
 -2.4182 <s> lange 0.0047
 -3.4604 <s> macht 0.0047
 -3.4604 <s> mein 0.0047
@@ -397,6 +397,7 @@ ngram 3=505
 -3.4604 <s> vier 0.0047
 -3.4604 <s> vom 0.0047
 -3.4604 <s> vor 0.0047
+-3.4604 <s> waehrend 0.0047
 -3.4604 <s> weil 0.0047
 -3.4604 <s> welcher 0.0047
 -3.4604 <s> welches 0.0047
@@ -406,7 +407,6 @@ ngram 3=505
 -3.4604 <s> wie 0.0047
 -1.3757 <s> wir -0.0002
 -3.4604 <s> wo 0.0047
--3.4604 <s> während 0.0047
 -3.4604 <s> zehn 0.0047
 -3.4604 <s> zwar 0.0047
 -3.4604 <s> zwischen 0.0047
@@ -433,7 +433,7 @@ ngram 3=505
 -1.4827 Menschen </s> 1.9679
 -1.4827 Milliarde Menschen 0.0047
 -1.4827 Million </s> 1.9679
--1.4827 Millionen möglich 0.0047
+-1.4827 Millionen moeglich 0.0047
 -1.4827 Moment </s> 1.9679
 -1.4827 Paragraph zur 0.0047
 -1.4827 Prozent </s> 1.9679
@@ -443,7 +443,7 @@ ngram 3=505
 -2.2608 Seheiah auf -0.0063
 -2.2608 Seheiah bye -0.0026
 -2.2608 Seheiah test 0.0047
--2.2608 Seheiah tschüss 0.0047
+-2.2608 Seheiah tschuess 0.0047
 -1.4827 Seite </s> 1.9679
 -1.4827 Stadt sehen 0.0047
 -0.7415 Uhr </s> 1.8756
@@ -508,7 +508,7 @@ ngram 3=505
 -1.4827 deutschen </s> 1.9679
 -1.4827 dich </s> 1.9679
 -1.7837 die anderen 0.0047
--1.7837 die große 0.0047
+-1.7837 die grosse 0.0047
 -1.4827 dies und -0.0075
 -1.4827 diese Million 0.0047
 -1.4827 diesem Jahr 0.0047
@@ -520,7 +520,7 @@ ngram 3=505
 -1.4827 dort </s> 1.9679
 -1.7837 drei </s> 1.9679
 -1.7837 drei Jahren 0.0771
--1.4827 du lässt 0.0047
+-1.4827 du laesst 0.0047
 -1.4827 durch dieses 0.0047
 -1.4827 eben durch 0.0047
 -1.9598 ein Herr 0.0047
@@ -534,7 +534,7 @@ ngram 3=505
 -1.4827 einmal allein 0.0047
 -1.4827 eins zwei -0.0026
 -1.4827 einzelnen deutschen 0.0047
--1.4827 elf zwölf 0.0047
+-1.4827 elf zwoelf 0.0047
 -1.4827 er wieder 0.0047
 -1.4827 erst dort 0.0047
 -1.4827 ersten Euro 0.0047
@@ -546,9 +546,9 @@ ngram 3=505
 -1.4827 etwas ganz 0.0047
 -1.4827 euch </s> 1.9679
 -1.4827 fest </s> 1.9679
--1.4827 fünf sechs 0.0047
--1.4827 für euch 0.0047
--1.4827 ganz für 0.0047
+-1.4827 fuenf sechs 0.0047
+-1.4827 fuer euch 0.0047
+-1.4827 ganz fuer 0.0047
 -1.4827 ganze </s> 1.9679
 -1.4827 ganzen </s> 1.9679
 -1.4827 gar nichts -0.0026
@@ -560,20 +560,20 @@ ngram 3=505
 -1.7837 genau gewesen 0.0771
 -1.7837 genau hier 0.0047
 -0.7415 gewesen </s> 1.8756
--1.4827 groß und -0.0075
--1.4827 große Stadt 0.0047
--1.4827 großen Moment 0.0047
+-1.4827 gross und -0.0075
+-1.4827 grosse Stadt 0.0047
+-1.4827 grossen Moment 0.0047
 -1.4827 gut gemacht 0.0047
 -1.4827 habe ihre 0.0047
 -1.4827 haben einen 0.0047
+-1.4827 haette vergehen 0.0047
 -1.4827 hat man 0.0047
 -1.4827 hatte ja 0.0047
 -1.4827 hatten ihren 0.0047
--1.4827 heißen </s> 1.9679
+-1.4827 heissen </s> 1.9679
 -1.4827 heute mehr 0.0047
 -1.4827 hier ist -0.0050
 -1.4827 hundert Herren 0.0047
--1.4827 hätte vergehen 0.0047
 -1.9598 ich hatte 0.0047
 -1.9598 ich konnte 0.0047
 -1.9598 ich sollte 0.0047
@@ -583,7 +583,7 @@ ngram 3=505
 -1.4827 ihr Land 0.0047
 -1.4827 ihre Uhr 0.0771
 -1.4827 ihrem </s> 1.9679
--1.4827 ihren großen 0.0047
+-1.4827 ihren grossen 0.0047
 -1.4827 im Jahre 0.0047
 -1.4827 immer </s> 1.9679
 -1.4827 in berlin 0.0047
@@ -599,16 +599,16 @@ ngram 3=505
 -1.4827 klein </s> 1.9679
 -1.7837 knapp drei -0.0026
 -1.7837 knapp war 0.0047
+-1.4827 koennen kommen 0.0047
 -1.4827 kommen </s> 1.9679
 -1.4827 konnte liegen 0.0047
--1.4827 können kommen 0.0047
--1.4827 künftig lang 0.0047
+-1.4827 kuenftig lang 0.0047
+-1.4827 laesst ihnen 0.0047
 -1.4827 lang am -0.0026
 -1.7837 lange genau -0.0026
 -1.7837 lange gut 0.0047
 -1.4827 lassen </s> 1.9679
 -1.4827 liegen </s> 1.9679
--1.4827 lässt ihnen 0.0047
 -1.4827 machen </s> 1.9679
 -1.4827 macht heute 0.0047
 -1.4827 man bei 0.0047
@@ -619,19 +619,19 @@ ngram 3=505
 -1.4827 mich und -0.0075
 -1.4827 mir </s> 1.9679
 -1.4827 mit denen 0.0047
+-1.4827 moechte gegen 0.0047
+-1.4827 moeglich </s> 1.9679
+-1.4827 muessen wir -0.0075
 -1.4827 muss nichts -0.0026
--1.4827 möchte gegen 0.0047
--1.4827 möglich </s> 1.9679
--1.4827 müssen wir -0.0075
 -1.4827 nach knapp -0.0026
 -1.4827 neu oder -0.0026
 -1.4827 neun </s> 1.9679
 -1.7837 nicht </s> 1.9679
 -1.7837 nicht sicher -0.0026
 -1.7837 nichts </s> 1.9679
--1.7837 nichts heißen 0.0047
+-1.7837 nichts heissen 0.0047
 -1.4827 noch nicht -0.0026
--1.4827 nun müssen 0.0047
+-1.4827 nun muessen 0.0047
 -1.4827 nur mich 0.0047
 -1.4827 ob neu 0.0047
 -1.7837 oder alt -0.0050
@@ -662,15 +662,15 @@ ngram 3=505
 -1.7837 sicher sein 0.0047
 -2.3278 sie haben 0.0047
 -2.3278 sie hatten 0.0047
--2.3278 sie können 0.0047
--2.3278 sie möchte 0.0047
+-2.3278 sie koennen 0.0047
+-2.3278 sie moechte 0.0047
 -2.3278 sie sind 0.0047
 -2.3278 sie was 0.0047
 -2.3278 sie wurde 0.0047
 -1.7837 sieben Uhr 0.0771
 -1.7837 sieben acht -0.0026
 -1.4827 sind viel 0.0047
--1.4827 so über 0.0047
+-1.4827 so ueber 0.0047
 -1.4827 solche Liebe 0.0047
 -1.4827 soll </s> 1.9679
 -1.7837 sollen </s> 1.9679
@@ -681,7 +681,8 @@ ngram 3=505
 -1.4827 stehen </s> 1.9679
 -1.4827 tausend </s> 1.9679
 -1.4827 test </s> 1.9679
--1.4827 tschüss </s> 1.9679
+-1.4827 tschuess </s> 1.9679
+-1.4827 ueber tausend 0.0047
 -1.4827 um sieben -0.0026
 -2.2608 und das -0.0063
 -2.2608 und dich 0.0047
@@ -694,22 +695,24 @@ ngram 3=505
 -1.4827 vergehen sollen -0.0026
 -1.4827 viel unter 0.0047
 -1.4827 vielleicht </s> 1.9679
--1.4827 vier fünf 0.0047
+-1.4827 vier fuenf 0.0047
 -1.4827 vom Anfang 0.0047
 -1.4827 von ihm 0.0047
 -1.4827 vor Jahren 0.0771
+-1.4827 waehrend derselben 0.0047
+-1.4827 waere es -0.0070
 -1.4827 war </s> 1.9679
 -1.4827 waren weit 0.0047
 -1.4827 was soll 0.0047
 -1.4827 weil sie -0.0078
+-1.4827 weiss weiter 0.0047
 -1.4827 weit </s> 1.9679
 -1.4827 weiter </s> 1.9679
--1.4827 weiß weiter 0.0047
 -1.4827 welche Weise 0.0047
--1.4827 welcher wäre 0.0047
--1.4827 welches würde -0.0026
+-1.4827 welcher waere 0.0047
+-1.4827 welches wuerde -0.0026
 -1.4827 wenn es -0.0070
--1.4827 wer weiß 0.0047
+-1.4827 wer weiss 0.0047
 -1.4827 werde worden 0.0047
 -1.4827 werden wir -0.0075
 -1.4827 wie werden 0.0047
@@ -726,22 +729,19 @@ ngram 3=505
 -1.4827 wohl politisch 0.0047
 -1.4827 wollen zum 0.0047
 -1.4827 worden wurden 0.0047
+-1.7837 wuerde es -0.0070
+-1.7837 wuerde gehen 0.0771
 -1.4827 wurde wohl 0.0047
 -1.4827 wurden </s> 1.9679
--1.4827 während derselben 0.0047
--1.4827 wäre es -0.0070
--1.7837 würde es -0.0070
--1.7837 würde gehen 0.0771
 -1.4827 zehn elf 0.0047
 -1.4827 zu diesem 0.0047
 -1.4827 zum Unternehmen 0.0047
 -1.4827 zur Regierung 0.0771
--1.4827 zwar würde -0.0026
+-1.4827 zwar wuerde -0.0026
 -1.7837 zwei Prozent 0.0047
 -1.7837 zwei drei -0.0026
 -1.4827 zwischen meiner 0.0047
--1.4827 zwölf </s> 1.9679
--1.4827 über tausend 0.0047
+-1.4827 zwoelf </s> 1.9679
 
 \3-grams:
 -1.1950 </s> <s> Seheiah 
@@ -773,16 +773,16 @@ ngram 3=505
 -3.6228 </s> <s> eins 
 -3.6228 </s> <s> etwas 
 -3.6228 </s> <s> genau 
--3.6228 </s> <s> groß 
+-3.6228 </s> <s> gross 
 -3.6228 </s> <s> habe 
+-3.6228 </s> <s> haette 
 -3.6228 </s> <s> hundert 
--3.6228 </s> <s> hätte 
 -1.4960 </s> <s> ich 
 -3.6228 </s> <s> im 
 -3.6228 </s> <s> jetzt 
 -3.6228 </s> <s> kein 
 -3.6228 </s> <s> keine 
--3.6228 </s> <s> künftig 
+-3.6228 </s> <s> kuenftig 
 -2.3509 </s> <s> lange 
 -3.6228 </s> <s> macht 
 -3.6228 </s> <s> mein 
@@ -808,6 +808,7 @@ ngram 3=505
 -3.6228 </s> <s> vier 
 -3.6228 </s> <s> vom 
 -3.6228 </s> <s> vor 
+-3.6228 </s> <s> waehrend 
 -3.6228 </s> <s> weil 
 -3.6228 </s> <s> welcher 
 -3.6228 </s> <s> welches 
@@ -817,7 +818,6 @@ ngram 3=505
 -3.6228 </s> <s> wie 
 -1.3711 </s> <s> wir 
 -3.6228 </s> <s> wo 
--3.6228 </s> <s> während 
 -3.6228 </s> <s> zehn 
 -3.6228 </s> <s> zwar 
 -3.6228 </s> <s> zwischen 
@@ -826,7 +826,7 @@ ngram 3=505
 -2.4278 <s> Seheiah auf 
 -2.4278 <s> Seheiah bye 
 -2.4278 <s> Seheiah test 
--2.4278 <s> Seheiah tschüss 
+-2.4278 <s> Seheiah tschuess 
 -1.6497 <s> aber auf 
 -1.6497 <s> alles einmal 
 -1.6497 <s> also allen 
@@ -846,10 +846,10 @@ ngram 3=505
 -1.6497 <s> der wird 
 -1.6497 <s> deren Regierung 
 -1.6497 <s> dessen sicher 
--1.6497 <s> die große 
+-1.6497 <s> die grosse 
 -1.6497 <s> dies und 
 -1.6497 <s> diesen ihrem 
--1.6497 <s> du lässt 
+-1.6497 <s> du laesst 
 -1.6497 <s> eben durch 
 -1.6497 <s> ein Herr 
 -1.6497 <s> eine einem 
@@ -857,10 +857,10 @@ ngram 3=505
 -1.6497 <s> eins zwei 
 -1.6497 <s> etwas ganz 
 -1.6497 <s> genau hier 
--1.6497 <s> groß und 
+-1.6497 <s> gross und 
 -1.6497 <s> habe ihre 
+-1.6497 <s> haette vergehen 
 -1.6497 <s> hundert Herren 
--1.6497 <s> hätte vergehen 
 -2.1268 <s> ich hatte 
 -2.1268 <s> ich konnte 
 -2.1268 <s> ich sollte 
@@ -868,7 +868,7 @@ ngram 3=505
 -1.6497 <s> jetzt noch 
 -1.6497 <s> kein Kind 
 -1.6497 <s> keine Frau 
--1.6497 <s> künftig lang 
+-1.6497 <s> kuenftig lang 
 -1.9507 <s> lange genau 
 -1.9507 <s> lange gut 
 -1.6497 <s> macht heute 
@@ -876,7 +876,7 @@ ngram 3=505
 -1.6497 <s> meine Milliarde 
 -1.6497 <s> mit denen 
 -1.6497 <s> nach knapp 
--1.6497 <s> nun müssen 
+-1.6497 <s> nun muessen 
 -1.6497 <s> nur mich 
 -1.6497 <s> ob neu 
 -1.6497 <s> ohne Paragraph 
@@ -889,22 +889,23 @@ ngram 3=505
 -1.6497 <s> selbst auf 
 -2.4278 <s> sie haben 
 -2.4278 <s> sie hatten 
--2.4278 <s> sie können 
--2.4278 <s> sie möchte 
+-2.4278 <s> sie koennen 
+-2.4278 <s> sie moechte 
 -2.4278 <s> sie sind 
 -2.4278 <s> sie wurde 
 -1.6497 <s> sieben acht 
--1.6497 <s> so über 
+-1.6497 <s> so ueber 
 -1.6497 <s> sondern solche 
 -1.6497 <s> um sieben 
--1.6497 <s> vier fünf 
+-1.6497 <s> vier fuenf 
 -1.6497 <s> vom Anfang 
 -1.6497 <s> vor Jahren 
+-1.6497 <s> waehrend derselben 
 -1.6497 <s> weil sie 
--1.6497 <s> welcher wäre 
--1.6497 <s> welches würde 
+-1.6497 <s> welcher waere 
+-1.6497 <s> welches wuerde 
 -1.6497 <s> wenn es 
--1.6497 <s> wer weiß 
+-1.6497 <s> wer weiss 
 -1.6497 <s> werde worden 
 -1.6497 <s> wie werden 
 -2.2517 <s> wir bleiben 
@@ -912,9 +913,8 @@ ngram 3=505
 -2.2517 <s> wir waren 
 -2.2517 <s> wir wollen 
 -1.6497 <s> wo will 
--1.6497 <s> während derselben 
 -1.6497 <s> zehn elf 
--1.6497 <s> zwar würde 
+-1.6497 <s> zwar wuerde 
 -1.6497 <s> zwischen meiner 
 -1.6497 Alarm aus </s> 
 -1.6497 Anfang </s> <s> 
@@ -939,7 +939,7 @@ ngram 3=505
 -1.6497 Menschen </s> <s> 
 -1.6497 Milliarde Menschen </s> 
 -1.6497 Million </s> <s> 
--1.6497 Millionen möglich </s> 
+-1.6497 Millionen moeglich </s> 
 -1.6497 Moment </s> <s> 
 -1.6497 Paragraph zur Regierung 
 -1.6497 Prozent </s> <s> 
@@ -949,7 +949,7 @@ ngram 3=505
 -1.6497 Seheiah auf Wiedersehen 
 -1.6497 Seheiah bye bye 
 -1.6497 Seheiah test </s> 
--1.6497 Seheiah tschüss </s> 
+-1.6497 Seheiah tschuess </s> 
 -1.6497 Seite </s> <s> 
 -1.6497 Stadt sehen </s> 
 -0.6788 Uhr </s> <s> 
@@ -1015,7 +1015,7 @@ ngram 3=505
 -1.6497 deutschen </s> <s> 
 -1.6497 dich </s> <s> 
 -1.6497 die anderen </s> 
--1.6497 die große Stadt 
+-1.6497 die grosse Stadt 
 -1.6497 dies und das 
 -1.6497 diese Million </s> 
 -1.6497 diesem Jahr bleiben 
@@ -1027,7 +1027,7 @@ ngram 3=505
 -1.6497 dort </s> <s> 
 -1.6497 drei </s> <s> 
 -1.6497 drei Jahren </s> 
--1.6497 du lässt ihnen 
+-1.6497 du laesst ihnen 
 -1.6497 durch dieses ganze 
 -1.6497 eben durch dieses 
 -1.6497 ein Herr </s> 
@@ -1041,7 +1041,7 @@ ngram 3=505
 -1.6497 einmal allein machen 
 -1.6497 eins zwei drei 
 -1.6497 einzelnen deutschen </s> 
--1.6497 elf zwölf </s> 
+-1.6497 elf zwoelf </s> 
 -1.6497 er wieder </s> 
 -1.6497 erst dort </s> 
 -1.6497 ersten Euro </s> 
@@ -1050,12 +1050,12 @@ ngram 3=505
 -1.6497 es gewesen </s> 
 -1.6497 es ist schon 
 -1.6497 es knapp war 
--1.6497 etwas ganz für 
+-1.6497 etwas ganz fuer 
 -1.6497 euch </s> <s> 
 -1.6497 fest </s> <s> 
--1.6497 fünf sechs </s> 
--1.6497 für euch </s> 
--1.6497 ganz für euch 
+-1.6497 fuenf sechs </s> 
+-1.6497 fuer euch </s> 
+-1.6497 ganz fuer euch 
 -1.6497 ganze </s> <s> 
 -1.6497 ganzen </s> <s> 
 -1.6497 gar nichts </s> 
@@ -1067,20 +1067,20 @@ ngram 3=505
 -1.6497 genau gewesen </s> 
 -1.6497 genau hier ist 
 -0.6788 gewesen </s> <s> 
--1.6497 groß und klein 
--1.6497 große Stadt sehen 
--1.6497 großen Moment </s> 
+-1.6497 gross und klein 
+-1.6497 grosse Stadt sehen 
+-1.6497 grossen Moment </s> 
 -1.6497 gut gemacht </s> 
 -1.6497 habe ihre Uhr 
 -1.6497 haben einen fest 
+-1.6497 haette vergehen sollen 
 -1.6497 hat man bei 
 -1.6497 hatte ja diese 
--1.6497 hatten ihren großen 
--1.6497 heißen </s> <s> 
+-1.6497 hatten ihren grossen 
+-1.6497 heissen </s> <s> 
 -1.6497 heute mehr Millionen 
 -1.6497 hier ist es 
 -1.6497 hundert Herren </s> 
--1.6497 hätte vergehen sollen 
 -1.6497 ich hatte ja 
 -1.6497 ich konnte liegen 
 -1.6497 ich sollte gar 
@@ -1090,7 +1090,7 @@ ngram 3=505
 -1.6497 ihr Land </s> 
 -1.6497 ihre Uhr </s> 
 -1.6497 ihrem </s> <s> 
--1.6497 ihren großen Moment 
+-1.6497 ihren grossen Moment 
 -1.6497 im Jahre des 
 -1.6497 immer </s> <s> 
 -1.6497 in berlin </s> 
@@ -1106,39 +1106,39 @@ ngram 3=505
 -1.6497 klein </s> <s> 
 -1.6497 knapp drei Jahren 
 -1.6497 knapp war </s> 
+-1.6497 koennen kommen </s> 
 -1.6497 kommen </s> <s> 
 -1.6497 konnte liegen </s> 
--1.6497 können kommen </s> 
--1.6497 künftig lang am 
+-1.6497 kuenftig lang am 
+-1.6497 laesst ihnen ihr 
 -1.6497 lang am Leben 
 -1.6497 lange genau gewesen 
 -1.6497 lange gut gemacht 
 -1.6497 lassen </s> <s> 
 -1.6497 liegen </s> <s> 
--1.6497 lässt ihnen ihr 
 -1.6497 machen </s> <s> 
 -1.6497 macht heute mehr 
 -1.6497 man bei mir 
--1.6497 mehr Millionen möglich 
+-1.6497 mehr Millionen moeglich 
 -1.6497 mein Mann ist 
 -1.6497 meine Milliarde Menschen 
 -1.6497 meiner Welt und 
 -1.6497 mich und dich 
 -1.6497 mir </s> <s> 
 -1.6497 mit denen da 
--1.6497 muss nichts heißen 
--1.6497 möchte gegen ihn 
--1.6497 möglich </s> <s> 
--1.6497 müssen wir vielleicht 
+-1.6497 moechte gegen ihn 
+-1.6497 moeglich </s> <s> 
+-1.6497 muessen wir vielleicht 
+-1.6497 muss nichts heissen 
 -1.6497 nach knapp drei 
 -1.6497 neu oder alt 
 -1.6497 neun </s> <s> 
 -1.6497 nicht </s> <s> 
 -1.6497 nicht sicher </s> 
 -1.6497 nichts </s> <s> 
--1.6497 nichts heißen </s> 
+-1.6497 nichts heissen </s> 
 -1.6497 noch nicht </s> 
--1.6497 nun müssen wir 
+-1.6497 nun muessen wir 
 -1.6497 nur mich und 
 -1.6497 ob neu oder 
 -1.6497 oder alt </s> 
@@ -1169,15 +1169,15 @@ ngram 3=505
 -1.6497 sicher sein </s> 
 -1.6497 sie haben einen 
 -1.6497 sie hatten ihren 
--1.6497 sie können kommen 
--1.6497 sie möchte gegen 
+-1.6497 sie koennen kommen 
+-1.6497 sie moechte gegen 
 -1.6497 sie sind viel 
 -1.6497 sie was soll 
 -1.6497 sie wurde wohl 
 -1.6497 sieben Uhr </s> 
 -1.6497 sieben acht neun 
 -1.6497 sind viel unter 
--1.6497 so über tausend 
+-1.6497 so ueber tausend 
 -1.6497 solche Liebe </s> 
 -1.6497 soll </s> <s> 
 -1.6497 sollen </s> <s> 
@@ -1188,7 +1188,8 @@ ngram 3=505
 -1.6497 stehen </s> <s> 
 -1.6497 tausend </s> <s> 
 -1.6497 test </s> <s> 
--1.6497 tschüss </s> <s> 
+-1.6497 tschuess </s> <s> 
+-1.6497 ueber tausend </s> 
 -1.6497 um sieben Uhr 
 -1.6497 und das </s> 
 -1.6497 und dich </s> 
@@ -1201,22 +1202,24 @@ ngram 3=505
 -1.6497 vergehen sollen </s> 
 -1.6497 viel unter sich 
 -1.6497 vielleicht </s> <s> 
--1.6497 vier fünf sechs 
+-1.6497 vier fuenf sechs 
 -1.6497 vom Anfang </s> 
 -1.6497 von ihm </s> 
 -1.6497 vor Jahren </s> 
+-1.6497 waehrend derselben Zeit 
+-1.6497 waere es </s> 
 -1.6497 war </s> <s> 
 -1.6497 waren weit </s> 
 -1.6497 was soll </s> 
 -1.6497 weil sie was 
+-1.6497 weiss weiter </s> 
 -1.6497 weit </s> <s> 
 -1.6497 weiter </s> <s> 
--1.6497 weiß weiter </s> 
 -1.6497 welche Weise </s> 
--1.6497 welcher wäre es 
--1.6497 welches würde gehen 
+-1.6497 welcher waere es 
+-1.6497 welches wuerde gehen 
 -1.6497 wenn es knapp 
--1.6497 wer weiß weiter 
+-1.6497 wer weiss weiter 
 -1.6497 werde worden wurden 
 -1.6497 werden wir das 
 -1.6497 wie werden wir 
@@ -1233,21 +1236,18 @@ ngram 3=505
 -1.6497 wohl politisch </s> 
 -1.6497 wollen zum Unternehmen 
 -1.6497 worden wurden </s> 
+-1.6497 wuerde es gehen 
+-1.6497 wuerde gehen </s> 
 -1.6497 wurde wohl politisch 
 -1.6497 wurden </s> <s> 
--1.6497 während derselben Zeit 
--1.6497 wäre es </s> 
--1.6497 würde es gehen 
--1.6497 würde gehen </s> 
--1.6497 zehn elf zwölf 
+-1.6497 zehn elf zwoelf 
 -1.6497 zu diesem Jahr 
 -1.6497 zum Unternehmen </s> 
 -1.6497 zur Regierung </s> 
--1.6497 zwar würde es 
+-1.6497 zwar wuerde es 
 -1.6497 zwei Prozent </s> 
 -1.6497 zwei drei </s> 
 -1.6497 zwischen meiner Welt 
--1.6497 zwölf </s> <s> 
--1.6497 über tausend </s> 
+-1.6497 zwoelf </s> <s> 
 
 \end\

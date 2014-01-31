@@ -30,7 +30,7 @@ class AlarmCascade(threading.Thread):
 		self.server.setblocking(0)
 		self.server.bind("/tmp/seheiah_alarm.sock")
 		
-		self.incomingAlarmTime = 0	#Zeitstempel eines möglichen Alarms
+		self.timestampUnexpBeh = 0	#timestamp unexpected behavior
 		#time to interrupt alarm
 		self.alarmValidateTime = rc.config.getint('alarmcascade','alarmValidateTime')
 		self.alarm = False
@@ -46,9 +46,9 @@ class AlarmCascade(threading.Thread):
 	"""
 	def interpretMessage(self,message):
 		#nur schlucken, wenn noch kein Alarm ausgelöst wurde
-		if((message == "UNEXPECTED BEHAVIOR") and (self.incomingAlarmTime == 0)):
+		if((message == "UNEXPECTED BEHAVIOR") and (self.timestampUnexpBeh == 0)):
 			print "perhaps Alarm"
-			self.incomingAlarmTime = int(time.time())
+			self.timestampUnexpBeh = int(time.time())
 			self.messageSended = False
 		#für den Fall eines eindeutigen Notfalls, etwa Hilferuf von Spracherkennung
 		elif(message == "HILFE"):
@@ -58,23 +58,24 @@ class AlarmCascade(threading.Thread):
 			#print "self.alarm=",self.alarm
 		elif(message == "ALARM AUS"):
 			try:
-				#self.incomingAlarmTime = 0
+				#self.timestampUnexpBeh = 0
+				print "KOMMANDO ALARM AUS"
 				self.alarm = False
 				self.messageSended = False
-				self.incomingAlarmTime = 0
+				self.timestampUnexpBeh = 0
 			except ValueError:	
 				pass
 		"""
 		#wenn abweichendes Verhalten festgestellt wurde, kann Alarm duch Wasserverbrauch entschärft werden
 		#ganz üble Frickellösung, unbedingt durch Spracherkennung oder von wasserverbrauch unabhängige Methode ersetzen
-		elif(("WATERFLOW" in message) and ((self.incomingAlarmTime > 0) or (self.alarm == True))):
+		elif(("WATERFLOW" in message) and ((self.timestampUnexpBeh > 0) or (self.alarm == True))):
 			splitMessage = message.split()
 			print "Message: ", message
 			try:
 				#wenn Wasserfluss einsetzt, nachdem unerwartetes Verhalten festgestellt wurde, kann von Fehlalarm ausgegangen werden
 				#wenn Alarm bereits läuft, zurücksetzen, um nächstes Auftreten zu erkennen
-				if(int(splitMessage[1]) > self.incomingAlarmTime):
-					self.incomingAlarmTime = 0
+				if(int(splitMessage[1]) > self.timestampUnexpBeh):
+					self.timestampUnexpBeh = 0
 					self.alarm = False
 					self.messageSended = False
 			except ValueError:	
@@ -158,12 +159,12 @@ class AlarmCascade(threading.Thread):
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
 	def checkAlarm(self):
-		if((self.incomingAlarmTime > 0) and (int(time.time()) <= self.incomingAlarmTime + self.alarmValidateTime)):
+		if((self.timestampUnexpBeh > 0) and (int(time.time()) <= self.timestampUnexpBeh + self.alarmValidateTime)):
 			#hier eine schöne Nachricht abspielen
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
 			self.pa.playMp3(mp3file)
 			time.sleep(10)
-		elif((self.incomingAlarmTime > 0) and (int(time.time()) > self.incomingAlarmTime + self.alarmValidateTime)):
+		elif((self.timestampUnexpBeh > 0) and (int(time.time()) > self.timestampUnexpBeh + self.alarmValidateTime)):
 			self.alarm = True
 
 
