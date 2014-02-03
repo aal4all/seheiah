@@ -484,7 +484,33 @@ class logDB(object):
 			time.sleep(3)
 			logging.error(str(e))
 	
-
+	#visualisation
+	"""
+	returns all Activities
+	@return list
+	"""
+	def getActivities4Vis(self):
+		try:
+			self.cursor.execute("SELECT starttime, starttime+duration FROM activity_log ;")
+			activities = self.cursor.fetchall()
+		except sqlite3.OperationalError,e:
+			time.sleep(3)
+			logging.error(str(e))
+		return activities
+		
+	"""
+	returns all probabilities
+	@return list
+	"""
+	def getProbabilities4Vis(self):
+		try:
+			self.cursor.execute("SELECT behavior_type, time_slice_starttime, probability FROM probabilities ;")
+			probabilities = self.cursor.fetchall()
+		except sqlite3.OperationalError,e:
+			time.sleep(3)
+			logging.error(str(e))
+		return probabilities
+	#end visualisation
 		
 	def closeDB(self):
 		self.conn.close()
