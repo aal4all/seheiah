@@ -264,7 +264,7 @@ class logDB(object):
 				#build list for daily probs and test only for other conditions, in there at least one event in all the time
 				if(condition == 10 or c10[i] > 0.0):
 					startTime = t[i] - tolerance #starttime with tolerance
-					endTime = t[i] + interval + tolerance #endtime with tolerance
+					endTime = t[i] + tolerance #endtime with tolerance
 					beforeMidnight = False
 					afterMidnight = False
 					#shortly befor midnight
@@ -379,13 +379,14 @@ class logDB(object):
 	def getRecentValues(self,moment):
 		#get interval length
 		interval = rc.config.getint('checkbehavior','interval')
+		toleranceIntervals = rc.config.getint('checkbehavior','toleranceIntervals')
 		#resultlist
 		values = []
 		#get time slice start for last recent values
 		ctstart = moment - (moment % interval)
 		#because the current timeslice isn't finished, we consider the slices before
 		#get last recent values
-		for i in range(ctstart - 3 * interval, ctstart, interval):
+		for i in range(ctstart - (2 * toleranceIntervals * interval), ctstart, interval):
 			try:
 				self.cursor.execute("SELECT DISTINCT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime >= ? OR starttime + duration >= ?;",(i, i))
 				values.append(float(self.cursor.fetchone()[0])) #we will operate with floats later
@@ -402,6 +403,7 @@ class logDB(object):
 	def getProbabilities(self, moment):
 		#get interval length
 		interval = rc.config.getint('checkbehavior','interval')
+		toleranceIntervals = rc.config.getint('checkbehavior','toleranceIntervals')
 		#get time slice start for historical values, get actual daytime and strip away interval
 		htstart = (moment - (moment % interval)) % 86400
 		#list for value lists
@@ -409,7 +411,7 @@ class logDB(object):
 		for condition in (10,15,17,20,30,40,50,60,70):
 			#values per condition
 			cvalues = []
-			for i in range(htstart - 3 * interval, htstart, interval):
+			for i in range(htstart - (2 * toleranceIntervals * interval), htstart, interval):
 				if(i < 0): #if i negative, then get get values of evening before
 					i += 86400
 				try:
@@ -482,23 +484,7 @@ class logDB(object):
 			time.sleep(3)
 			logging.error(str(e))
 	
-	#visualisation
-	def getActivities(self,weekend):
-		#DB-Abfrage anpassen, je nachdem ob WE ist oder nicht
-		if weekend: #Wochenende
-			sql_weekend = " strftime('%w',starttime,'unixepoch','localtime') NOT BETWEEN '1' AND '5'"
-		else: #Wochentag
-			sql_weekend = " strftime('%w',starttime,'unixepoch','localtime') BETWEEN '1' AND '5'"
-		#sql = "SELECT date(starttime,'unixepoch','localtime'), time(starttime,'unixepoch','localtime'), date(starttime+duration,'unixepoch','localtime'), time(starttime+duration,'unixepoch','localtime') FROM activity_log WHERE " + sql_weekend + " ;"
 
-		try:
-			self.cursor.execute("SELECT starttime, starttime+duration FROM activity_log WHERE " + sql_weekend + " ;")
-			activities = self.cursor.fetchall()
-		except sqlite3.OperationalError,e:
-			time.sleep(3)
-			logging.error(str(e))
-		del sql_weekend
-		return activities
 		
 	def closeDB(self):
 		self.conn.close()

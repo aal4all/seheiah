@@ -97,14 +97,17 @@ class Check(threading.Thread):
 				print recentBehavior
 				print usuallyBehavior
 				print self.emergency
-			else:
-				self.emergency = 0
-		
+				logging.info("UNEXPECTED BEHAVIOR")
+				self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
+			#else:
+			#	self.emergency = 0
+		"""
 		if(self.emergency >= (self.toleranceIntervals * 2) + 1): #Alarm auslösen
 			logging.info("UNEXPECTED BEHAVIOR")
 			self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
 			#reset alarm counter
 			self.emergency = 0
+		"""
 	
 
 	
