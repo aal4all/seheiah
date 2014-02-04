@@ -81,7 +81,8 @@ for i in range(0, len(days)):
 	ax[i].plot(x,y)
 ax[len(days)-1].set_xlabel("Time")
 plt.figure(1)
-plt.savefig('events.png', dpi=150, bbox_inches=0)
+filename = "events_" + time.strftime('%y%m%d',time.gmtime(days[i] - time.timezone))+".png"
+plt.savefig(filename, dpi=150, bbox_inches=0)
 
 #probabilities plots
 f, bx = plt.subplots(len(conditions),1, sharex=True)
@@ -101,5 +102,6 @@ for j in range(0,len(conditions)):
 	bx[j].plot(np.array([0,24]),np.array([rc.config.getfloat('classification','thresholdProbability'),rc.config.getfloat('classification','thresholdProbability')]),'b-')
 bx[len(conditions)-1].set_xlabel("Time")
 plt.figure(2)
+filename = "probs_" + time.strftime('%y%m%d',time.gmtime(days[i] - time.timezone))+".png"
 plt.savefig('probs.png', dpi=150, bbox_inches=0)
 #plt.show()
