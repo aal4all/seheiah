@@ -103,5 +103,5 @@ for j in range(0,len(conditions)):
 bx[len(conditions)-1].set_xlabel("Time")
 plt.figure(2)
 filename = "probs_" + time.strftime('%y%m%d',time.gmtime(days[i] - time.timezone))+".png"
-plt.savefig('probs.png', dpi=150, bbox_inches=0)
+plt.savefig(filename, dpi=150, bbox_inches=0)
 #plt.show()
