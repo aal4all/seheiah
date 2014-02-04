@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 24.01.2014
+@Date 04.02.2014
 @brief database operations for activity monitor
 """
 
@@ -436,11 +436,11 @@ class logDB(object):
 		try:
 			self.cursor.executescript("""
 				BEGIN TRANSACTION;
-				DELETE FROM activity_log WHERE starttime+duration < delTimestamp;
-				DELETE FROM absence WHERE endAbsence < delTimestamp;
-				DELETE FROM logged_days WHERE logged_day < delTimestamp;
+				DELETE FROM activity_log WHERE starttime+duration < ?;
+				DELETE FROM absence WHERE endAbsence < ?;
+				DELETE FROM logged_days WHERE logged_day < ?;
 				COMMIT;
-				""")
+				""",(delTimestamp, delTimestamp, delTimestamp))
 			self.conn.commit()
 		except sqlite3.OperationalError,e:
 			time.sleep(3)

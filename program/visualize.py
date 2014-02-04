@@ -3,12 +3,14 @@
 
 """
 @author Falko Benthin
-@Date 02.02.2014
+@Date 04.02.2014
 @brief visualize activities
 """
 
 import logdb
 import numpy as np
+import matplotlib
+matplotlib.use("AGG") #to plot directly in file
 import matplotlib.pyplot as plt
 import time
 import readConfig as rc

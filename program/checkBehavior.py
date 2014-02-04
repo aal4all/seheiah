@@ -93,7 +93,7 @@ class Check(threading.Thread):
 			usuallyBehavior = self.getUsuallyVector(db,currTime)
 			
 			if(self.classify.behaviorDiffCos(recentBehavior, usuallyBehavior)):
-				self.emergency += 1
+				#self.emergency += 1
 				print recentBehavior
 				print usuallyBehavior
 				print self.emergency

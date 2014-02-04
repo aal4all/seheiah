@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 05.01.2014
+@Date 04.02.2014
 @brief initiate alarm cascade
 """
 
@@ -27,7 +27,7 @@ class AlarmCascade(threading.Thread):
 			os.remove( "/tmp/seheiah_alarm.sock" )
 		print "Opening socket..."
 		self.server = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) #DGRAM
-		self.server.setblocking(0)
+		self.server.setblocking(1) #this was 0
 		self.server.bind("/tmp/seheiah_alarm.sock")
 		
 		self.timestampUnexpBeh = 0	#timestamp unexpected behavior
@@ -172,15 +172,16 @@ class AlarmCascade(threading.Thread):
 		logging.info("Thread AlarmCascade started")
 		while True:
 			#auf Socket Nachrichten empfangen und weiterreichen
-			time.sleep(5)
+			time.sleep(1)
 			try:
 				data = self.server.recv(32) #so viele Daten werden nicht erwartet
 				if not data:
 					break
 				else: #falls Daten vorhanden sind, werden sie ausgewertet
 					self.interpretMessage(data)
-			except socket.error:
+			except socket.error, e:
 				time.sleep(1)
+				logging.error("Socket error" + str(e))
 			#bei unerwartetem Verhalten prüfen, ob es sich um Fehlalarm handelt und evtl. Alarm auslösen
 			self.checkAlarm()
 			if(self.alarm == True):
