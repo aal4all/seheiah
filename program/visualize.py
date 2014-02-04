@@ -79,8 +79,9 @@ for i in range(0, len(days)):
 	ax[i].set_xticklabels(range(0,24),rotation=0,fontsize=8)
 	ax[i].set_xlabel("Time")
 	ax[i].plot(x,y)
+ax[len(days)-1].set_xlabel("Time")
 plt.figure(1)
-plt.savefig('events.png', dpi=300, bbox_inches=0)
+plt.savefig('events.png', dpi=150, bbox_inches=0)
 
 #probabilities plots
 f, bx = plt.subplots(len(conditions),1, sharex=True)
@@ -95,10 +96,11 @@ for j in range(0,len(conditions)):
 	bx[j].set_ylabel("P("+probYLabelDic[conditions[j]]+")",rotation=0, fontsize='small')
 	bx[j].set_xticks(range(0,24))
 	bx[j].set_xticklabels(range(0,24),rotation=0,fontsize=8)
-	bx[j].set_xlabel("Time")
+	
 	bx[j].vlines(x, [0], y)
 	bx[j].plot(np.array([0,24]),np.array([1,1]),'r-')
 	bx[j].plot(np.array([0,24]),np.array([rc.config.getfloat('classification','thresholdProbability'),rc.config.getfloat('classification','thresholdProbability')]),'b-')
+bx[len(conditions)-1].set_xlabel("Time")
 plt.figure(2)
-plt.savefig('probs.png', dpi=300, bbox_inches=0)
+plt.savefig('probs.png', dpi=150, bbox_inches=0)
 #plt.show()
