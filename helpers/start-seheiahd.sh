@@ -1,6 +1,6 @@
 # starts seheiah daemon
 #!/bin/bash
-. ~/profile
+. ~/.profile
 PATH_TO_SEHEIAH="/home/falko/seheiah"
 cd $PATH_TO_SEHEIAH/program
 ./seheiahd.py start

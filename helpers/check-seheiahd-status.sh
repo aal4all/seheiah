@@ -23,7 +23,7 @@ then
 				sudo pigpiod
 			fi
 		else
-			echo "ERROR: install pigpiod" | tee $PATH_TO_SEHEIAH/logs/seheiah.log
+			echo "ERROR: start pigpiod" | tee $PATH_TO_SEHEIAH/logs/seheiah.log
 			exit 1
 		fi
 	fi
