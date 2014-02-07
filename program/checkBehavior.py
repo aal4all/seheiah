@@ -141,7 +141,7 @@ class Check(threading.Thread):
 			if (0 < currTime % self.interval <= self.interval/30):
 				#at least on time per interval write monitored day to database, to avoid, that it will be forgotten, because seheiah is'nt running or switched on at false time
 				print "db.lastrec ", db.getLastDayRecord(), "today ", (currTime - currTime%86400)
-				if not (db.getLastDayRecord() == (currTime - currTime%86400)):
+				if (currTime%86400 > 2 * self.interval) and not (db.getLastDayRecord() == (currTime - currTime%86400)): #at first delete old entries, then build probs
 					try:
 						#when insert day-record, also create probabilities
 						db.createProbabilities()
@@ -160,7 +160,7 @@ class Check(threading.Thread):
 				self.markerCheckBehavior = False
 				
 			#einmal pro Tag Datenbank von alten Einträgen befreien
-			if((0 < currTime % 86400 <= 600) and not self.markerCheckDelete):
+			if((0 < currTime % 86400 <= 2 * self.interval) and not self.markerCheckDelete):
 				logging.info("delOldEntries")
 				self.markerCheckDelete = True
 				if(savedDays > self.observePeriod):
