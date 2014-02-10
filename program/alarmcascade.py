@@ -161,9 +161,9 @@ class AlarmCascade(threading.Thread):
 	def checkAlarm(self):
 		if((self.timestampUnexpBeh > 0) and (int(time.time()) <= self.timestampUnexpBeh + self.alarmValidateTime)):
 			#hier eine schöne Nachricht abspielen
-			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
-			self.pa.playMp3(mp3file)
-			time.sleep(10)
+			if(0 <= int(time.time())%20 <= 3):
+				mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
+				self.pa.playMp3(mp3file)
 		elif((self.timestampUnexpBeh > 0) and (int(time.time()) > self.timestampUnexpBeh + self.alarmValidateTime)):
 			self.alarm = True
 

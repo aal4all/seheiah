@@ -70,7 +70,7 @@ class Check(threading.Thread):
 			#we've got the values for last three slices
 			i = currentVector.shape[0]
 			while i > 0:
-				if(sensorIsFiring < (ctstart - ((i-1) * interval))):
+				if(sensorIsFiring < (ctstart - ((i-1) * self.interval))):
 					currentVector[currentVector.shape[0]-i] = 1.0
 				i -= 1
 		return currentVector
@@ -93,21 +93,21 @@ class Check(threading.Thread):
 			usuallyBehavior = self.getUsuallyVector(db,currTime)
 			
 			if(self.classify.behaviorDiffCos(recentBehavior, usuallyBehavior)):
-				#self.emergency += 1
+				self.emergency += 1
 				print recentBehavior
 				print usuallyBehavior
 				print self.emergency
-				logging.info("UNEXPECTED BEHAVIOR")
-				self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
-			#else:
-			#	self.emergency = 0
-		"""
-		if(self.emergency >= (self.toleranceIntervals * 2) + 1): #Alarm auslösen
+				#logging.info("UNEXPECTED BEHAVIOR")
+				#self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
+			else:
+				self.emergency = 0
+		
+		if(self.emergency > (self.toleranceIntervals * 2)): #Alarm auslösen
 			logging.info("UNEXPECTED BEHAVIOR")
 			self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
 			#reset alarm counter
 			self.emergency = 0
-		"""
+		
 	
 
 	
@@ -141,7 +141,7 @@ class Check(threading.Thread):
 			if (0 < currTime % self.interval <= self.interval/30):
 				#at least on time per interval write monitored day to database, to avoid, that it will be forgotten, because seheiah is'nt running or switched on at false time
 				print "db.lastrec ", db.getLastDayRecord(), "today ", (currTime - currTime%86400)
-				if (currTime%86400 > 2 * self.interval) and not (db.getLastDayRecord() == (currTime - currTime%86400)): #at first delete old entries, then build probs
+				if (currTime%86400 > self.toleranceIntervals * self.interval) and not (db.getLastDayRecord() == (currTime - currTime%86400)): #at first delete old entries, then build probs
 					try:
 						#when insert day-record, also create probabilities
 						db.createProbabilities()
@@ -160,7 +160,7 @@ class Check(threading.Thread):
 				self.markerCheckBehavior = False
 				
 			#einmal pro Tag Datenbank von alten Einträgen befreien
-			if((0 < currTime % 86400 <= 2 * self.interval) and not self.markerCheckDelete):
+			if((0 < currTime % 86400 <= self.toleranceIntervals * self.interval) and not self.markerCheckDelete):
 				logging.info("delOldEntries")
 				self.markerCheckDelete = True
 				if(savedDays > self.observePeriod):
@@ -170,5 +170,5 @@ class Check(threading.Thread):
 			
 			time.sleep(self.interval/60)
 			#immer Starttime an Socket senden, um Fehlalarme zu kennzeichnen
-			self.messageToAlarmCascade("WATERFLOW %s" % self.mon.getStartTime())
+			#self.messageToAlarmCascade("WATERFLOW %s" % self.mon.getStartTime())
 			
