@@ -61,6 +61,12 @@ mailpass = gehaim
 mailsubject = "Alarm: kontaktiere den Opa"
 #message
 mailmessage = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
+#its possible, to start a sip client in emergency case. This should be a Cli-Client like pjsua or linphone
+#use sip-client 0 = False, 1 = True
+sipClient = 0
+#commands to start and stop sip client, paths must be absolute
+cmdSipClientStart = screen -dmS pjsua bash -c "/home/falko/pjproject-2.1.0/pjsip-apps/bin/pjsua-armv6l-unknown-linux-gnu --config-file=/home/falko/seheiah/helpers/pjsua.cfg"
+cmdSipClientStop = killall pjsua-armv6l-unknown-linux-gnu
 
 [audiofiles]
 unexpectedBehavior = audiofiles/de_unexpected_behavior.mp3

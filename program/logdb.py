@@ -432,15 +432,11 @@ class logDB(object):
 	"""
 	def delOldEntries(self,today):
 		observePeriod = rc.config.getint('checkbehavior','observePeriod') #get observed period
-		delTimestamp = today - (observePeriod * 30)
+		delTimestamp = today - (observePeriod * 86400) #and remove everything, which is older
 		try:
-			self.cursor.executescript("""
-				BEGIN TRANSACTION;
-				DELETE FROM activity_log WHERE starttime+duration < ?;
-				DELETE FROM absence WHERE endAbsence < ?;
-				DELETE FROM logged_days WHERE logged_day < ?;
-				COMMIT;
-				""",(delTimestamp, delTimestamp, delTimestamp))
+			self.cursor.execute("DELETE FROM activity_log WHERE starttime+duration < ?;", (delTimestamp, ))
+			self.cursor.execute("DELETE FROM absence WHERE endAbsence < ?;", (delTimestamp, ))
+			self.cursor.execute("DELETE FROM logged_days WHERE logged_day < ?;", (delTimestamp, ))
 			self.conn.commit()
 		except sqlite3.OperationalError,e:
 			time.sleep(3)
