@@ -68,7 +68,7 @@ class AlarmCascade(threading.Thread):
 				self.messageSended = False
 				self.timestampUnexpBeh = 0
 				if (self.sipClient == 1):
-					p = subprocess.Popen([rc.config.get('alarmcascade','cmdSipClientStop'])
+					p = subprocess.Popen(rc.config.get('alarmcascade','cmdSipClientStop'))
 					p.communicate()
 			except ValueError:	
 				pass
@@ -147,7 +147,7 @@ class AlarmCascade(threading.Thread):
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallDone')
 			self.pa.playMp3(mp3file)
 			if (self.sipClient == 1):
-				p = subprocess.Popen([rc.config.get('alarmcascade','cmdSipClientStart'])
+				p = subprocess.Popen(rc.config.get('alarmcascade','cmdSipClientStart'))
 				p.communicate()
 			self.messageSended = True
 	
