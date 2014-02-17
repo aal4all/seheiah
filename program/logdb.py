@@ -480,6 +480,13 @@ class logDB(object):
 			time.sleep(3)
 			logging.error(str(e))
 	
+	def truncatedb(self):
+		self.cursor.execute("DELETE FROM probabilities;")
+		self.cursor.execute("DELETE FROM activity_log")
+		self.cursor.execute("DELETE FROM logged_days")
+		self.cursor.execute("DELETE FROM absence")
+		self.conn.commit()
+	
 	#visualisation
 	"""
 	returns all Activities

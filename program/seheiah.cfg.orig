@@ -65,8 +65,8 @@ mailmessage = "Hallo, mit Opa Fritz ist etwas faul. Schau nach!"
 #use sip-client 0 = False, 1 = True
 sipClient = 0
 #commands to start and stop sip client, paths must be absolute
-cmdSipClientStart = screen -dmS pjsua bash -c "/home/falko/pjproject-2.1.0/pjsip-apps/bin/pjsua-armv6l-unknown-linux-gnu --config-file=/home/falko/seheiah/helpers/pjsua.cfg"
-cmdSipClientStop = killall pjsua-armv6l-unknown-linux-gnu
+cmdSipClientStart = /home/falko/linphonestart.sh
+cmdSipClientStop = /home/falko/linphonestop.sh
 
 [audiofiles]
 unexpectedBehavior = audiofiles/de_unexpected_behavior.mp3

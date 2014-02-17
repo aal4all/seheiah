@@ -33,6 +33,9 @@ class AlarmCascade(threading.Thread):
 		self.timestampUnexpBeh = 0	#timestamp unexpected behavior
 		#time to interrupt alarm
 		self.alarmValidateTime = rc.config.getint('alarmcascade','alarmValidateTime')
+		#use sip-client for feedback?
+		self.sipClient = rc.config.getint('alarmcascade','sipClient')
+		
 		self.alarm = False
 		self.snapshotFilename = "" #name der Snaphot-Datei
 		self.messageSended = False #Marker, ob NAchricht bereits gesendet wurde
@@ -50,6 +53,7 @@ class AlarmCascade(threading.Thread):
 			print "perhaps Alarm"
 			self.timestampUnexpBeh = int(time.time())
 			self.messageSended = False
+			
 		#für den Fall eines eindeutigen Notfalls, etwa Hilferuf von Spracherkennung
 		elif(message == "HILFE"):
 			print "HILFE !!!"
@@ -63,24 +67,11 @@ class AlarmCascade(threading.Thread):
 				self.alarm = False
 				self.messageSended = False
 				self.timestampUnexpBeh = 0
+				if (self.sipClient == 1):
+					p = subprocess.Popen([rc.config.get('alarmcascade','cmdSipClientStop'])
+					p.communicate()
 			except ValueError:	
 				pass
-		"""
-		#wenn abweichendes Verhalten festgestellt wurde, kann Alarm duch Wasserverbrauch entschärft werden
-		#ganz üble Frickellösung, unbedingt durch Spracherkennung oder von wasserverbrauch unabhängige Methode ersetzen
-		elif(("WATERFLOW" in message) and ((self.timestampUnexpBeh > 0) or (self.alarm == True))):
-			splitMessage = message.split()
-			print "Message: ", message
-			try:
-				#wenn Wasserfluss einsetzt, nachdem unerwartetes Verhalten festgestellt wurde, kann von Fehlalarm ausgegangen werden
-				#wenn Alarm bereits läuft, zurücksetzen, um nächstes Auftreten zu erkennen
-				if(int(splitMessage[1]) > self.timestampUnexpBeh):
-					self.timestampUnexpBeh = 0
-					self.alarm = False
-					self.messageSended = False
-			except ValueError:	
-				pass
-		"""
 
 	#does a beautyful picture of a room
 	def makeSnapshot(self):
@@ -155,6 +146,9 @@ class AlarmCascade(threading.Thread):
 			self.sendEmailMessage()
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallDone')
 			self.pa.playMp3(mp3file)
+			if (self.sipClient == 1):
+				p = subprocess.Popen([rc.config.get('alarmcascade','cmdSipClientStart'])
+				p.communicate()
 			self.messageSended = True
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 

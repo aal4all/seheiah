@@ -3,41 +3,35 @@
 
 """
 @author Falko Benthin
-@Date 26.01.2014
+@Date 05.02.2014
 @brief fills database with regulary events, to test the classifiers
 In time of testing Seheiah isn't able to collect event data reliably
 """
-import sqlite3, os, time, random
+import time, random
+import numpy as np
+import logdb
 import readConfig as rc
+import classify
 
 class Ompadroid():
 	def __init__(self):
-		self.db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logdb','database'))
-	
+		self.db = logdb.logDB()
+		self.classify = classify.Classify()
+		
 	"""
 	backups original database
-	"""
+	
 	def backupdb(self):
 		dbbackup = self.db + ".backup"
 		os.system ("cp %s %s" % (self.db, dbbackup))
-	
+	"""
 	"""
 	restores original database
-	"""
+	
 	def restoredb(self):
 		dbbackup = self.db + ".backup"
 		os.system ("mv %s %s" % (dbbackup, self.db))
-	
-	def truncatedb(self):
-		conn = sqlite3.connect(self.db, timeout=10)
-		cursor = conn.cursor()
-		cursor.execute("DELETE FROM probabilities;")
-		cursor.execute("DELETE FROM activity_log")
-		cursor.execute("DELETE FROM logged_days")
-		cursor.execute("DELETE FROM absence")
-		conn.commit()
-		conn.close()
-	
+	"""
 	"""
 	fills db with historical data, so that Seheiah within few minutes after given time should detect unexpected behavior 
 	@param int daycondition:
@@ -52,17 +46,13 @@ class Ompadroid():
 	@param int duration
 	@param bool withTolerance: events occurs with torlerances
 	"""
-	def createData(self, daytime, duration, withTolerance):
-		self.backupdb()
-		self.truncatedb()
-		conn = sqlite3.connect(self.db, timeout=10)
-		cursor = conn.cursor()
+	def createData(self, duration, withTolerance):
+		#self.backupdb()
+		self.db.truncatedb()
 		today = int(time.time())-(int(time.time()) % 86400)
 		observePeriod = rc.config.getint('checkbehavior','observePeriod')
 		interval = rc.config.getint('checkbehavior','interval')
 		toleranceIntervals = rc.config.getint('checkbehavior','toleranceIntervals')
-		if (daytime>86400):
-			daytime = daytime % 86400
 		#generate data
 		dayinterval = {
 			10 : 1, #daily
@@ -74,16 +64,51 @@ class Ompadroid():
 			70 : 7, #weekly
 			}
 		for day in range(today - (observePeriod * 86400),today,86400):
-			print day, ", ", type(day)
-			if(withTolerance):
-				tolerance=random.randint(-interval*toleranceIntervals, interval*toleranceIntervals) 
+			self.db.addDayRecord(day)
+			for daytime in range(8*3600, 20*3600+1,3600):
+				if(withTolerance):
+					tolerance=random.randint(-interval*toleranceIntervals, interval*toleranceIntervals) 
+				else:
+					tolerance = 0
+				self.db.add_log(day + daytime + tolerance, duration + random.randint(-duration/2, duration/2))
+		self.db.createProbabilities()
+	
+	#erstellt Vector für zurückliegenden Zeitraum
+	#rechnet Toleranz mit rein
+	def getUsuallyVector(self,daytime):		
+		usuallyVector = np.asarray(self.db.getProbabilities(daytime))
+		return 	usuallyVector
+	
+	#testet, ob abweichendes Verhalten bei Inaktivität zero = true oder übermäßig langem Wasserfluss  zero = false erkannt wird
+	def testBehavior(self,zero):
+		interval = rc.config.getint('checkbehavior','interval')
+		toleranceIntervals = rc.config.getint('checkbehavior','toleranceIntervals')
+		starttime = 8*3600 #start in the morning
+		recentBehavior = np.asarray(self.db.getRecentValues(starttime))
+		if(zero):
+			recentBehavior[:] = 0.0
+		else:
+			recentBehavior[:] = 1.0
+		emergency = 0 #counter for emergency
+		alarms = 0 # for inactivity should be 20 alarms at the end, for activity it should be something about 
+		for daytime in range(starttime,21*3600, interval):
+			usuallyBehavior = self.getUsuallyVector(daytime)
+			
+			if(self.classify.behaviorDiffCos(recentBehavior, usuallyBehavior)):
+				emergency += 1
+				#print recentBehavior
+				#print usuallyBehavior
+				#print emergency
 			else:
-				tolerance = 0
-			cursor.execute("INSERT INTO logged_days (logged_day) VALUES (?);",(day,))
-			cursor.execute("INSERT INTO activity_log (starttime,duration) VALUES (?,?);",(day + (daytime + interval*(toleranceIntervals+1)) + tolerance,duration + random.randint(-duration/2, duration/2)))
-		conn.commit()
-		conn.close()
+				emergency = 0
 		
+			if(emergency >= (toleranceIntervals * 2)): #Alarm auslösen
+				#print recentBehavior
+				#print usuallyBehavior
+				alarms += 1
+				#reset alarm counter
+				emergency = 0
+		
+		return alarms
 			
-			
-			
+

@@ -102,7 +102,7 @@ class Check(threading.Thread):
 			else:
 				self.emergency = 0
 		
-		if(self.emergency > (self.toleranceIntervals * 2)): #Alarm auslösen
+		if(self.emergency >= (self.toleranceIntervals * 2)): #Alarm auslösen
 			logging.info("UNEXPECTED BEHAVIOR")
 			self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
 			#reset alarm counter

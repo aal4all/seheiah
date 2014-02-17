@@ -16,6 +16,7 @@ class Classify():
 	def __init__(self):
 		self.thresholdProbability = rc.config.getfloat('classification','thresholdProbability')
 		self.thresholdCosSimilarity = rc.config.getfloat('classification','thresholdCosSimilarity')
+		
 	
 	"""
 	check, if recent bahavior is conspicuous
@@ -35,7 +36,7 @@ class Classify():
 		"""
 		lenghtV = np.linalg.norm(recentBehavior)
 		logging.debug("aktueller Vektor: %s La:nge: %s" % (recentBehavior, lenghtV))
-		if(lenghtV == 0.0 or lenghtV == np.sqrt(3.0)):
+		if(lenghtV == 0.0 or lenghtV == np.sqrt(1.0*recentBehavior.shape[0])):
 			return True
 		else:
 			return False
