@@ -163,5 +163,5 @@ class GstSphinxCli(object):
 		gobject.MainLoop().quit()
 	
 	def run(self):
-		logging.info("Thread Pocketsphinx started")
+		logging.info("Pocketsphinx started")
 		gobject.MainLoop().run()

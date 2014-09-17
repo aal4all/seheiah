@@ -26,23 +26,25 @@ class Monitor(threading.Thread):
 		self.sensor_threshold_min = rc.config.getint('monitor','sensor_threshold_min')
 		self.pir = rc.config.getboolean('monitor','pir')
 		if(self.pir):
-			"""
 			import RPi.GPIO as GPIO
-			self.pirGPIO = rc.config.int('monitor','pirGPIO')
-			GPIO.setup(pirGPIO,GPIO.IN)
-			"""
-			try:
-				import pigpio
-			except ImportError:
-				self.pigpio = None
-			else:
-				self.pigpio = pigpio
-				self.pirGPIO = rc.config.getint('monitor','pirGPIO')
-				self.pirFunc = rc.config.getint('monitor','pirFunc')
-				self.pigpio.start()
-				self.pigpio.set_mode(self.pirGPIO,  self.pigpio.INPUT)
-				if (self.pirFunc == 2):
-					self.pirStarttime = 0
+			self.pirGPIO = rc.config.getint('monitor','pirGPIO')
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(self.pirGPIO,GPIO.IN)
+			self.pirFunc = rc.config.getint('monitor','pirFunc')
+			if (self.pirFunc == 2):
+				self.pirStarttime = 0
+			#try:
+			#	import pigpio
+			#except ImportError:
+			#	self.pigpio = None
+			#else:
+			#	self.pigpio = pigpio
+			#	self.pirGPIO = rc.config.getint('monitor','pirGPIO')
+			#	self.pirFunc = rc.config.getint('monitor','pirFunc')
+			#	self.pigpio.start()
+			#	self.pigpio.set_mode(self.pirGPIO,  self.pigpio.INPUT)
+			#	if (self.pirFunc == 2):
+			#		self.pirStarttime = 0
 		self.starttime = 0
 		
 		
@@ -96,7 +98,8 @@ class Monitor(threading.Thread):
 			#read pir
 			if(self.pir):
 				try:
-					pirState = self.pigpio.read(self.pirGPIO)
+					#pirState = self.pigpio.read(self.pirGPIO)
+					pirState = GPIO.input(self.pirGPIO)
 					if(pirState == 1):
 						#if pir is in the area, where the subject is staying most of the time, you need another variable than  
 						if (self.pirFunc == 1): #if Pir is supporter
@@ -107,7 +110,8 @@ class Monitor(threading.Thread):
 						#while pir is firing
 						while not (pirState == 0) and (self.pirFunc == 1): #only go in while loop, if pir is supporter
 							time.sleep(0.5)
-							pirState = self.pigpio.read(self.pirGPIO)
+							#pirState = self.pigpio.read(self.pirGPIO)
+							pirState = GPIO.input(self.pirGPIO)
 				except Exception, e:
 					logging.error(str(e))
 					
@@ -121,5 +125,5 @@ class Monitor(threading.Thread):
 		#close database
 		db.closeDB()
 		# Reset GPIO settings
-		#GPIO.cleanup()
-		self.pigpio.stop()
+		GPIO.cleanup()
+		#self.pigpio.stop()
