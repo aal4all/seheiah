@@ -1,4 +1,4 @@
-#gst_sphinx_cli.py
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 
 """
@@ -37,11 +37,12 @@
 
 
 import logging #logfile
-import os,time
+import os,sys,time
+#from daemon import runner
 import gobject
 import pygst
 pygst.require('0.10')
-gobject.threads_init()
+#gobject.threads_init()
 import gst
 #own
 import readConfig as rc
@@ -50,7 +51,15 @@ import playAudio
 
 class GstSphinxCli(object):
 
-	def __init__(self): 
+	def __init__(self):
+		#daemon
+		#self.stdin_path = '/dev/null'
+		#self.stdout_path = '/dev/tty'
+		#self.stderr_path = '/dev/tty'
+		#self.pidfile_path =  '/tmp/seheiah_pocketphinx.pid'
+		#self.pidfile_timeout = 7
+		
+		#speech recognition
 		#hmm, lm, dic
 		"""
 		hmm = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('speechrecognition','hmdir'))
@@ -146,7 +155,7 @@ class GstSphinxCli(object):
 	#future todo:DRY
 	def messageToAlarmCascade(self,message):
 		import socket
-		import os, os.path
+		import os.path
 		if os.path.exists("/tmp/seheiah_alarm.sock"):
 			client = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) #DGRAM
 			try:
@@ -165,3 +174,32 @@ class GstSphinxCli(object):
 	def run(self):
 		logging.info("Pocketsphinx started")
 		gobject.MainLoop().run()
+
+def daemonize():
+	try:
+		# Store the Fork PID
+		pid = os.fork()
+		if pid > 0:
+			print 'PID: %d' % pid
+			os._exit(0)
+	except OSError, error:
+		print 'Unable to fork. Error: %d (%s)' % (error.errno, error.strerror)
+		os._exit(1)
+	
+	try:
+		GstSphinxCli().run()
+	except KeyboardInterrupt:
+		GstSphinxCli().quit()
+		sys.exit(130)
+		print "\b\bexit"
+	except (IOError, OSError):
+		GstSphinxCli().quit()
+		sys.exit(141)
+		print "\b\bexit"
+
+if __name__ == "__main__":
+	daemonize()
+
+#app = GstSphinxCli()
+#daemon_runner = runner.DaemonRunner(app)
+#daemon_runner.do_action()

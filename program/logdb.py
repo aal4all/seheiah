@@ -459,8 +459,12 @@ class logDB(object):
 	"""
 	def getLastDayRecord(self):
 		try:
-			self.cursor.execute("SELECT MAX(logged_day) FROM logged_days")
-			lastLoggedDay = int(self.cursor.fetchone()[0])
+			self.cursor.execute("SELECT MAX(logged_day) FROM logged_days;")
+			result = self.cursor.fetchone()[0]
+			if result is None:
+				lastLoggedDay = 0
+			else:
+				lastLoggedDay = int(result)
 		except sqlite3.OperationalError,e:
 			time.sleep(3)
 			logging.error(str(e))

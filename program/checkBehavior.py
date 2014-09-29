@@ -144,8 +144,9 @@ class Check(threading.Thread):
 				if (currTime%86400 > self.toleranceIntervals * self.interval) and not (db.getLastDayRecord() == (currTime - currTime%86400)): #at first delete old entries, then build probs
 					try:
 						#when insert day-record, also create probabilities
-						db.createProbabilities()
 						db.addDayRecord(currTime)
+						if (savedDays >= self.minObservedPeriod):
+							db.createProbabilities()
 					except:
 						logging.error("Impossibile to create probabilities or insert day record")
 				#if patient not at home, play all 5 minutes a small file to remember, that monitoring is disabled and avoid unintentional turn off

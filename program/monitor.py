@@ -3,7 +3,7 @@
 
 """
 @author Falko Benthin
-@Date 05.01.2014
+@Date 17.09.2014
 @brief monitors flow and pir sensors
 """
 
@@ -21,7 +21,6 @@ class Monitor(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self) #threading-class initialisieren
 		self.daemon = True
-		#self.port = #port='/dev/sensors/arduino_A400fXzQ' #Mutterns Sensor
 		self.port = rc.config.get('monitor','arduino_port')
 		self.sensor_threshold_min = rc.config.getint('monitor','sensor_threshold_min')
 		self.pir = rc.config.getboolean('monitor','pir')
@@ -30,7 +29,7 @@ class Monitor(threading.Thread):
 			self.pirGPIO = rc.config.getint('monitor','pirGPIO')
 			GPIO.setmode(GPIO.BOARD)
 			GPIO.setup(self.pirGPIO,GPIO.IN)
-			self.pirFunc = rc.config.getint('monitor','pirFunc')
+			self.pirFunc = rc.config.getint('monitor','pirFunc') #pir works as sensor or filter
 			if (self.pirFunc == 2):
 				self.pirStarttime = 0
 			#try:
@@ -71,6 +70,15 @@ class Monitor(threading.Thread):
 		logging.info("Thread Monitor started")
 		
 		db = logdb.logDB()	#load database
+		
+		if(self.pir):
+			try:
+				import RPi.GPIO as GPIO
+				GPIO.setmode(GPIO.BOARD)
+				GPIO.setup(self.pirGPIO,GPIO.IN)
+			except RuntimeError:
+				logging.error("Error importing RPi.GPIO!  You need superuser privileges. use 'sudo' or run your script as root")
+							
 		#connection arduino flow sensor
 		serialFromArduino=serial.Serial(self.port,9600)
 		serialFromArduino.flushInput()

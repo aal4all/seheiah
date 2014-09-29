@@ -4,17 +4,18 @@
 """
 @author Falko Benthin
 @Date 17.01.2014
-@brief reads and writes absence file
+@brief reads and writes absence file, absent is a timestamp (int), when seheiah recognise the byebye command. Absent==0 means, the monitored person is at home 
 """
 
-import time
+import os,time
 import logging
 import logdb
+import readConfig as rc
 
 class Absence():
 	
 	def __init__(self):
-		self.absenceFileName = "/tmp/seheiah_absence"
+		self.absenceFileName = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('absencefile','absenceFile'))
 		#intervals to considering in seconds
 	"""
 	sets absence
@@ -22,7 +23,7 @@ class Absence():
 	def set(self,absent):
 		try:
 			absenceFile = open(self.absenceFileName, "r+")
-			if (absent == 0): #when home again
+			if (absent == 0): #when home
 				try:
 					starttime = int(absenceFile.read())
 				except IOError:

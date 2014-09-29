@@ -14,7 +14,7 @@ import logging
 import monitor
 import checkBehavior
 import alarmcascade
-import gstSphinxCli
+#import gstSphinxCli
 import readConfig as rc
 
 class Seheiah(object):
@@ -27,7 +27,11 @@ class Seheiah(object):
 		self.pidfile_timeout = 7
 		#set logfile
 		self.logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','logfile'))
-		
+	
+	def quit(self):
+		#threads in init definieren und hier beenden
+		pass
+	
 	#als daemon laufen
 	def run(self):
 		#set logging
@@ -39,7 +43,7 @@ class Seheiah(object):
 		mon = monitor.Monitor()
 		alarm = alarmcascade.AlarmCascade()
 		check = checkBehavior.Check(mon)
-		pocketsphinx = gstSphinxCli.GstSphinxCli()
+		#pocketsphinx = gstSphinxCli.GstSphinxCli()
 		mythreads.append(mon)
 		mythreads.append(alarm)
 		mythreads.append(check)
@@ -47,14 +51,17 @@ class Seheiah(object):
 		
 		for thread in mythreads:
 			thread.start()
-		pocketsphinx.run()
+		#pocketsphinx.run()
 		
 		while True:
 			try:
 				time.sleep(0.01)
 			except:
-				pocketsphinx.quit()
-		
+				for thread in mythreads:
+					thread.stop()
+				print "\b\bexit"
+				#sys.exit(130)
+
 app = Seheiah()
 daemon_runner = runner.DaemonRunner(app)
 daemon_runner.do_action()

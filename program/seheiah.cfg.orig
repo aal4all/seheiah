@@ -77,6 +77,10 @@ emergencyCallDone = audiofiles/de_emergency_call_done.mp3
 #file to play, if patient isn't at home
 monitoringOff = audiofiles/halleluja.mp3
 
+[absencefile]
+#file to read and write times of absence (relative to path/seheiah)
+absenceFile = seheiah_absence
+
 [speechrecognition]
 #Hidden Markov Model Dir (relative to path/seheiah)
 hmdir = acoustic_model/model_parameters/seheiah_de.cd_semi_200
