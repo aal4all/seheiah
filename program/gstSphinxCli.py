@@ -75,7 +75,7 @@ class GstSphinxCli(object):
 		self.cmdAlarmOff = unicode(rc.config.get('speechrecognition','cmdAlarmOff'))
 		#self.cmdTest = unicode(rc.config.get('speechrecognition','cmdTest'))
 		self.cmdBye = unicode(rc.config.get('speechrecognition','cmdBye'))
-		
+				
 		self.init_gst(hmm, lm, dic)
 		
 		#load playaudio
@@ -180,10 +180,10 @@ def daemonize():
 		# Store the Fork PID
 		pid = os.fork()
 		if pid > 0:
-			print 'PID: %d' % pid
+			logging.info('PID: %d' % pid)
 			os._exit(0)
 	except OSError, error:
-		print 'Unable to fork. Error: %d (%s)' % (error.errno, error.strerror)
+		logging.error('Unable to fork. Error: %d (%s)' % (error.errno, error.strerror))
 		os._exit(1)
 	
 	try:
@@ -198,6 +198,11 @@ def daemonize():
 		print "\b\bexit"
 
 if __name__ == "__main__":
+	#set logging
+	loglevel = rc.config.getint('logging','loglevel')
+	logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','logfile'))
+	logging.basicConfig(filename=self.logfile,filemode = 'w',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
+	
 	daemonize()
 
 #app = GstSphinxCli()
