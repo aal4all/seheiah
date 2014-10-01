@@ -201,7 +201,7 @@ if __name__ == "__main__":
 	#set logging
 	loglevel = rc.config.getint('logging','loglevel')
 	logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','logfile'))
-	logging.basicConfig(filename=self.logfile,filemode = 'a',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
+	logging.basicConfig(filename=logfile,filemode = 'a',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 	
 	daemonize()
 
