@@ -156,16 +156,12 @@ class AlarmCascade(threading.Thread):
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
 	def checkAlarm(self):
-		logging.debug("function checkalarm()")
 		if((self.timestampUnexpBeh > 0) and (int(time.time()) <= self.timestampUnexpBeh + self.alarmValidateTime)):
-			logging.debug("checkalarm: if condition Unexp. Beh")
 			#hier eine schöne Nachricht abspielen
 			if(0 <= int(time.time())%20 <= 3):
-				logging.debug("checkalarm: play audiofile")
 				mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
 				self.pa.playMp3(mp3file)
 		elif((self.timestampUnexpBeh > 0) and (int(time.time()) > self.timestampUnexpBeh + self.alarmValidateTime)):
-			logging.debug("checkalarm: set alarm to true")
 			self.alarm = True
 
 
@@ -175,20 +171,16 @@ class AlarmCascade(threading.Thread):
 			#auf Socket Nachrichten empfangen und weiterreichen
 			time.sleep(1)
 			try:
-				logging.debug("alarmcasc: check for data")
 				data = self.server.recv(32) #so viele Daten werden nicht erwartet
 				if not data:
-					logging.debug("alarmcasc: no data")
 					break
 				else: #falls Daten vorhanden sind, werden sie ausgewertet
-					logging.debug("alarmcasc: interpret data")
 					self.interpretMessage(data)
 			except socket.timeout:
 				pass
 			except socket.error, e:
 				logging.error("Socket error" + str(e))
 			#bei unerwartetem Verhalten prüfen, ob es sich um Fehlalarm handelt und evtl. Alarm auslösen
-			logging.debug("alarmcasc: call checkalarm")
 			self.checkAlarm()
 			if(self.alarm == True):
 				self.processAlarm()
