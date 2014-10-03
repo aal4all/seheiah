@@ -420,10 +420,11 @@ class logDB(object):
 					i += 86400
 				try:
 					self.cursor.execute("SELECT probability FROM probabilities WHERE behavior_type = ? AND time_slice_starttime = ?;",(condition,i))
-					if (not self.cursor.fetchone()[0]):
+					res = self.cursor.fetchone()
+					if (not res):
 						prob = 0.0		
 					else:
-						prob = float(self.cursor.fetchone()[0])
+						prob = float(res[0])
 					cvalues.append(prob)
 				except sqlite3.OperationalError,e:
 					time.sleep(3)
