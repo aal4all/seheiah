@@ -140,7 +140,7 @@ class Check(threading.Thread):
 			
 			if (0 < currTime % self.interval <= self.interval/30):
 				#at least on time per interval write monitored day to database, to avoid, that it will be forgotten, because seheiah is'nt running or switched on at false time
-				print "db.lastrec ", db.getLastDayRecord(), "today ", (currTime - currTime%86400)
+				logging.info("db.lastrec %s today %s" % (db.getLastDayRecord(), currTime - currTime%86400))
 				if (currTime%86400 > self.toleranceIntervals * self.interval) and not (db.getLastDayRecord() == (currTime - currTime%86400)): #at first delete old entries, then build probs
 					try:
 						#when insert day-record, also create probabilities

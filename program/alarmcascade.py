@@ -27,7 +27,8 @@ class AlarmCascade(threading.Thread):
 			os.remove( "/tmp/seheiah_alarm.sock" )
 		print "Opening socket..."
 		self.server = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) #DGRAM
-		self.server.setblocking(1) #this was 0
+		self.server.setblocking(1) #this was 0, but it throws to many errors
+		self.server.settimeout(1)
 		self.server.bind("/tmp/seheiah_alarm.sock")
 		
 		self.timestampUnexpBeh = 0	#timestamp unexpected behavior
@@ -50,20 +51,22 @@ class AlarmCascade(threading.Thread):
 	def interpretMessage(self,message):
 		#nur schlucken, wenn noch kein Alarm ausgelöst wurde
 		if((message == "UNEXPECTED BEHAVIOR") and (self.timestampUnexpBeh == 0)):
-			print "perhaps Alarm"
+			logging.info("command UNEXPECTED BEHAVIOR")
 			self.timestampUnexpBeh = int(time.time())
+			logging.debug("UNEXPECTED BEHAVIOR timestamp: %s" % self.timestampUnexpBeh)
 			self.messageSended = False
+			logging.debug("messageSended: %s" % self.messageSended)
 			
 		#für den Fall eines eindeutigen Notfalls, etwa Hilferuf von Spracherkennung
 		elif(message == "HILFE"):
-			print "HILFE !!!"
+			logging.info("command HILFE")
 			self.alarm = True
 			self.messageSended = False
 			#print "self.alarm=",self.alarm
 		elif(message == "ALARM AUS"):
 			try:
 				#self.timestampUnexpBeh = 0
-				print "KOMMANDO ALARM AUS"
+				logging.info("command ALARM AUS")
 				self.alarm = False
 				self.messageSended = False
 				self.timestampUnexpBeh = 0
@@ -153,12 +156,16 @@ class AlarmCascade(threading.Thread):
 	
 	#prüft, ob Alarm auszulösen ist, z.B. wenn unerwartetes Verhalten auftritt oder 
 	def checkAlarm(self):
+		logging.debug("function checkalarm()")
 		if((self.timestampUnexpBeh > 0) and (int(time.time()) <= self.timestampUnexpBeh + self.alarmValidateTime)):
+			logging.debug("checkalarm: if condition Unexp. Beh")
 			#hier eine schöne Nachricht abspielen
 			if(0 <= int(time.time())%20 <= 3):
+				logging.debug("checkalarm: play audiofile")
 				mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
 				self.pa.playMp3(mp3file)
 		elif((self.timestampUnexpBeh > 0) and (int(time.time()) > self.timestampUnexpBeh + self.alarmValidateTime)):
+			logging.debug("checkalarm: set alarm to true")
 			self.alarm = True
 
 
@@ -168,15 +175,20 @@ class AlarmCascade(threading.Thread):
 			#auf Socket Nachrichten empfangen und weiterreichen
 			time.sleep(1)
 			try:
+				logging.debug("alarmcasc: check for data")
 				data = self.server.recv(32) #so viele Daten werden nicht erwartet
 				if not data:
+					logging.debug("alarmcasc: no data")
 					break
 				else: #falls Daten vorhanden sind, werden sie ausgewertet
+					logging.debug("alarmcasc: interpret data")
 					self.interpretMessage(data)
+			except socket.timeout:
+				pass
 			except socket.error, e:
-				time.sleep(1)
 				logging.error("Socket error" + str(e))
 			#bei unerwartetem Verhalten prüfen, ob es sich um Fehlalarm handelt und evtl. Alarm auslösen
+			logging.debug("alarmcasc: call checkalarm")
 			self.checkAlarm()
 			if(self.alarm == True):
 				self.processAlarm()

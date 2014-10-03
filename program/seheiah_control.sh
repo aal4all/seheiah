@@ -20,6 +20,7 @@ start)
 	fi
 	echo "start seheiahd (Monitor) ..."
 	sudo ./seheiahd.py start
+	sleep 10
 	echo "done"
 	
 	echo "start speech recognition ..."

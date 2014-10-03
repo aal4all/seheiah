@@ -129,7 +129,8 @@ class Monitor(threading.Thread):
 				#writes waterconsumption or pir sensor firing in database, if duration is more than two seconds
 				if(duration >= 2):
 					db.add_log(self.starttime,duration)
-					
+	
+	def stop():	
 		#close database
 		db.closeDB()
 		# Reset GPIO settings
