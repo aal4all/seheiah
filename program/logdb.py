@@ -110,14 +110,14 @@ class logDB(object):
 			50 : "AND (logged_day / 86400) % 5 = "+ str((today / 86400) % 5), #every 5 days
 			60 : "AND (logged_day / 86400) % 6 = "+ str((today / 86400) % 6), #every 6 days
 			70 : "AND (logged_day / 86400) % 7 = "+ str((today / 86400) % 7), #weekly
-			71 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '1'",#every monday, consider timezone
-			72 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '2'",#every tuesday, consider timezone
-			73 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '3'",#every wednesday, consider timezone
-			74 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '4'",#every thursday, consider timezone
-			75 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '5'",#every friday, consider timezone
-			76 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '6'",#every saturday, consider timezone
-			77 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '0'",#every sunday, consider timezone
 			}
+			#~ 71 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '1'",#every monday, consider timezone
+			#~ 72 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '2'",#every tuesday, consider timezone
+			#~ 73 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '3'",#every wednesday, consider timezone
+			#~ 74 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '4'",#every thursday, consider timezone
+			#~ 75 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '5'",#every friday, consider timezone
+			#~ 76 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '6'",#every saturday, consider timezone
+			#~ 77 : "AND strftime('%w',logged_day-(" + str(time.timezone) +"),'unixepoch','localtime') = '0'",#every sunday, consider timezone
 		try:
 			self.cursor.execute("SELECT logged_day FROM logged_days WHERE logged_day < ? " + whereClause[condition] +";", (today,))
 			for element in self.cursor.fetchall(): #liefere alle tage zurück, Für Tagesanzahl muss Liste gezählt werden	 
@@ -205,51 +205,51 @@ class logDB(object):
 			(70,True,False)  : "AND ((starttime / 86400) % 7 IN  ("+ str((today / 86400) % 7) +","+str(((today / 86400)+1) % 7) + ") OR  ((starttime+duration) / 86400) % 7 IN  ("+ str((today / 86400) % 7) +","+str(((today / 86400)+1) % 7) + "))",
 			#after midnight, search starttime also in day before
 			(70,False,True)  : "AND ((starttime / 86400) % 7 IN  ("+ str((today / 86400) % 7) +","+str(((today / 86400)-1) % 7) + ") OR  ((starttime+duration) / 86400) % 7 IN  ("+ str((today / 86400) % 7) +","+str(((today / 86400)-1) % 7) + "))",
-			#every monday, consider timezone
-			#normal
-			(71,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '1'",
-			#before midnight, see for endtime also next day
-			(71,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('1','2')",
-			#after midnight, search in day before
-			(71,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('0','1')",
-			#every tuesday, consider timezone
-			#normal
-			(72,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '2'",
-			#before midnight, see for endtime also next day
-			(72,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('2','3')",
-			#after midnight, search in day before
-			(72,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('1','2')",
-			#every wednesday, consider timezone
-			(73,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '3'",
-			#before midnight, see for endtime also next day
-			(73,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('3','4')",
-			#after midnight, search in day before
-			(73,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('2','3')",
-			#every thursday, consider timezone
-			(74,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '4'",
-			#before midnight, see for endtime also next day
-			(74,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('4','5')",
-			#after midnight, search in day before
-			(74,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('3','4')",
-			#every friday, consider timezone
-			(75,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '5'",
-			#before midnight, see for endtime also next day
-			(75,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('5','6')",
-			#after midnight, search in day before
-			(75,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('4','5')",
-			#every saturday, consider timezone
-			(76,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '6'",
-			#before midnight, see for endtime also next day
-			(76,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('6','7')",
-			#after midnight, search in day before
-			(76,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('5','6')",
-			#every sunday, consider timezone
-			(77,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '0'",
-			#before midnight, see for endtime also next day
-			(77,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('0','1')",
-			#after midnight, search in day before
-			(77,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('6','0')",
 			}
+			#~ #every monday, consider timezone
+			#~ #normal
+			#~ (71,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '1'",
+			#~ #before midnight, see for endtime also next day
+			#~ (71,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('1','2')",
+			#~ #after midnight, search in day before
+			#~ (71,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('0','1')",
+			#~ #every tuesday, consider timezone
+			#~ #normal
+			#~ (72,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '2'",
+			#~ #before midnight, see for endtime also next day
+			#~ (72,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('2','3')",
+			#~ #after midnight, search in day before
+			#~ (72,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('1','2')",
+			#~ #every wednesday, consider timezone
+			#~ (73,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '3'",
+			#~ #before midnight, see for endtime also next day
+			#~ (73,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('3','4')",
+			#~ #after midnight, search in day before
+			#~ (73,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('2','3')",
+			#~ #every thursday, consider timezone
+			#~ (74,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '4'",
+			#~ #before midnight, see for endtime also next day
+			#~ (74,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('4','5')",
+			#~ #after midnight, search in day before
+			#~ (74,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('3','4')",
+			#~ #every friday, consider timezone
+			#~ (75,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '5'",
+			#~ #before midnight, see for endtime also next day
+			#~ (75,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('5','6')",
+			#~ #after midnight, search in day before
+			#~ (75,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('4','5')",
+			#~ #every saturday, consider timezone
+			#~ (76,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '6'",
+			#~ #before midnight, see for endtime also next day
+			#~ (76,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('6','7')",
+			#~ #after midnight, search in day before
+			#~ (76,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('5','6')",
+			#~ #every sunday, consider timezone
+			#~ (77,False,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') = '0'",
+			#~ #before midnight, see for endtime also next day
+			#~ (77,True,False) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('0','1')",
+			#~ #after midnight, search in day before
+			#~ (77,False,True) : "AND strftime('%w',starttime-(" + str(time.timezone) +"),'unixepoch','localtime') IN ('6','0')",
 		#list with times
 		t = range(0, 86400, interval)
 		#list with daily probabilities, prefilled with 0s
@@ -257,7 +257,7 @@ class logDB(object):
 		for i in range(0,len(t)):
 			c10.append(0.0)		
 		dbValues = []	
-		for condition in (10,15,17,20,30,40,50,60,70,71,72,73,74,75,76,77):
+		for condition in (10,15,17,20,30,40,50,60,70): #,71,72,73,74,75,76,77):
 			#dbValues = []
 			for i in range(0,len(t)):
 				probability = 0.0 #default, no event at time
@@ -278,6 +278,7 @@ class logDB(object):
 					values = (today, startTime, startTime, endTime, endTime) #werte für query
 					#suche alle in der Vergangenheit, die innerhalb des Tolleranzbereichs beginnen oder enden
 					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400) >= ? OR ((starttime+duration)%86400) >= ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) AND (((starttime%86400) <= ? OR ((starttime+duration)%86400) <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
+					logging.debug("SQL-query: %s" % (countSql,))
 					try:
 						self.cursor.execute(countSql, values)
 						frequency = float(self.cursor.fetchone()[0]) #anzahl erfasster Activitäten im definierten Zeitraum
@@ -290,6 +291,7 @@ class logDB(object):
 						savedDays = self.getSavedDays(today,condition)
 						offDays = self.getAbsences(t[i],interval,today,savedDays)
 						probability = frequency/(len(savedDays)-offDays)
+						logging.debug("Frequency: %s \n savedDays: %s \n offDays: %s \n probability: %s" % (frequency,savedDays,offdays,probability))
 					if(condition == 10):
 						c10[i] = probability
 				dbValues.append((condition,t[i],probability))
