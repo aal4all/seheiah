@@ -278,7 +278,8 @@ class logDB(object):
 					values = (today, startTime, startTime, endTime, endTime) #werte für query
 					#suche alle in der Vergangenheit, die innerhalb des Tolleranzbereichs beginnen oder enden
 					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400) >= ? OR ((starttime+duration)%86400) >= ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) AND (((starttime%86400) <= ? OR ((starttime+duration)%86400) <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
-					logging.debug("SQL-query: %s" % (countSql,))
+					if(i == 1):
+						logging.debug("SQL-query: %s" % (countSql,))
 					try:
 						self.cursor.execute(countSql, values)
 						frequency = float(self.cursor.fetchone()[0]) #anzahl erfasster Activitäten im definierten Zeitraum
@@ -291,7 +292,7 @@ class logDB(object):
 						savedDays = self.getSavedDays(today,condition)
 						offDays = self.getAbsences(t[i],interval,today,savedDays)
 						probability = frequency/(len(savedDays)-offDays)
-						logging.debug("Frequency: %s \n savedDays: %s \n offDays: %s \n probability: %s" % (frequency,savedDays,offdays,probability))
+						logging.debug("Freq: %s : savedDays: %s : offDays: %s : prob %s" % (frequency,savedDays,offdays,probability))
 					if(condition == 10):
 						c10[i] = probability
 				dbValues.append((condition,t[i],probability))
