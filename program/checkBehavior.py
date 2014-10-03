@@ -144,8 +144,10 @@ class Check(threading.Thread):
 				if (currTime%86400 > self.toleranceIntervals * self.interval) and not (db.getLastDayRecord() == (currTime - currTime%86400)): #at first delete old entries, then build probs
 					try:
 						#when insert day-record, also create probabilities
+						logging.info("insert dayrecord")
 						db.addDayRecord(currTime)
 						if (savedDays >= self.minObservedPeriod):
+							logging.info("create Probabilities")
 							db.createProbabilities()
 					except:
 						logging.error("Impossibile to create probabilities or insert day record")

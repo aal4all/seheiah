@@ -279,7 +279,7 @@ class logDB(object):
 					#suche alle in der Vergangenheit, die innerhalb des Tolleranzbereichs beginnen oder enden
 					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400) >= ? OR ((starttime+duration)%86400) >= ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) AND (((starttime%86400) <= ? OR ((starttime+duration)%86400) <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
 					if(i == 1):
-						logging.debug("SQL-query: %s" % (countSql,))
+						logging.debug("SQL-query: %s \n values: %s" % (countSql,values))
 					try:
 						self.cursor.execute(countSql, values)
 						frequency = float(self.cursor.fetchone()[0]) #anzahl erfasster Activitäten im definierten Zeitraum
