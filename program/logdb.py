@@ -323,6 +323,7 @@ class logDB(object):
 	"""
 	def addProbabilities(self,dbValues):
 		try:
+			logging.debug("execute addProbabilities")
 			self.cursor.executemany("INSERT INTO probabilities (behavior_type, time_slice_starttime, probability) VALUES (?,?,?);", dbValues)
 			self.conn.commit()
 		except sqlite3.OperationalError,e:
