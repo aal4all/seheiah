@@ -94,9 +94,9 @@ class Check(threading.Thread):
 			
 			if(self.classify.behaviorDiffCos(recentBehavior, usuallyBehavior)):
 				self.emergency += 1
-				print recentBehavior
-				print usuallyBehavior
-				print self.emergency
+				logging.debug("recentBehavior: %s" % (recentBehavior,))
+				logging.debug("usuallyBehavior: %s" % (usuallyBehavior,))
+				ligging.debug("self.emergency: %s" % (self.emergency,))
 				#logging.info("UNEXPECTED BEHAVIOR")
 				#self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
 			else:
