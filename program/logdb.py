@@ -275,7 +275,7 @@ class logDB(object):
 					if (startTime < 0):
 						startTime = startTime + 86400
 						afterMidnight = True
-					if (beforeMidnight OR afterMidnight):
+					if (beforeMidnight or afterMidnight):
 						midnight = "OR"
 					else:
 						midnight = "AND"
