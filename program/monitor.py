@@ -10,11 +10,11 @@
 import serial, sys, time
 import threading
 import logging
+import subprocess
 #own
 import logdb
 import readConfig as rc
 import absence
-import playAudio
 
 class Monitor(threading.Thread):
 	#initialisieren
@@ -49,8 +49,6 @@ class Monitor(threading.Thread):
 		
 		#read absence
 		self.absence = absence.Absence()
-		#audioplayback
-		self.pa = playAudio.playAudio()
 
 	#set start time, if a sensor is firing
 	def setStartTime(self):
@@ -59,11 +57,15 @@ class Monitor(threading.Thread):
 		if(self.absence.get()):
 			self.absence.set(0)
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','enableMonitoring')
-			self.pa.playMp3(mp3file)
+			self.playAudio(mp3file)
 	
 	#returns starttime, it's important to detect long waterflow
 	def getStartTime(self):
 		return self.starttime
+
+	def playAudio(self,fileName):
+		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"playAudio.py"), fileName])
+		p.communicate()
 
 	def run(self):
 		

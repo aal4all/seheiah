@@ -10,11 +10,11 @@
 import threading, time
 import numpy #Cosinius-Ähnlichkeit
 import logging #logdatei
+import subprocess
 #own
 import logdb
 import readConfig as rc
 import absence
-import playAudio
 import classify
 
 
@@ -42,10 +42,6 @@ class Check(threading.Thread):
 		self.markerCheckDelete = False #wurden alte Werte korrekt gelöscht?
 		
 		self.absence = absence.Absence()
-		
-		#load playaudio
-		self.pa = playAudio.playAudio()
-		
 
 	#erstellt Vector für zurückliegenden Zeitraum
 	#rechnet Toleranz mit rein
@@ -96,7 +92,7 @@ class Check(threading.Thread):
 				self.emergency += 1
 				logging.debug("recentBehavior: %s" % (recentBehavior,))
 				logging.debug("usuallyBehavior: %s" % (usuallyBehavior,))
-				ligging.debug("self.emergency: %s" % (self.emergency,))
+				logging.debug("self.emergency: %s" % (self.emergency,))
 				#logging.info("UNEXPECTED BEHAVIOR")
 				#self.messageToAlarmCascade("UNEXPECTED BEHAVIOR")	
 			else:
@@ -108,8 +104,9 @@ class Check(threading.Thread):
 			#reset alarm counter
 			self.emergency = 0
 		
-	
-
+	def playAudio(self,fileName):
+		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"playAudio.py"), fileName])
+		p.communicate()
 	
 	def messageToAlarmCascade(self,message):
 		import socket
@@ -154,7 +151,7 @@ class Check(threading.Thread):
 				#if patient not at home, play all 5 minutes a small file to remember, that monitoring is disabled and avoid unintentional turn off
 				if not (patientPresent):
 					mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','monitoringOff')
-					self.pa.playMp3(mp3file)
+					self.playAudio(mp3file)
 			#pro interval einmal Verhalten prüfen, falls Patient anwesend ist
 			if((0 < currTime % self.interval <= self.interval/10) and savedDays >= self.minObservedPeriod and patientPresent and not self.markerCheckBehavior):
 				self.checkBehavior(db, currTime)

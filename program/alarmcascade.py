@@ -14,7 +14,6 @@ import threading
 import logging
 #eigene
 import readConfig as rc
-import playAudio
 
 class AlarmCascade(threading.Thread):
 	#initialisieren
@@ -41,10 +40,6 @@ class AlarmCascade(threading.Thread):
 		self.snapshotFilename = "" #name der Snaphot-Datei
 		self.messageSended = False #Marker, ob NAchricht bereits gesendet wurde
 		
-		#load audioplay
-		self.pa = playAudio.playAudio()
-
-
 	"""
 	receive commands from socket, checks and set alarm varaibles
 	"""
@@ -81,6 +76,10 @@ class AlarmCascade(threading.Thread):
 		#delegate the snapshot to subprocess. because its memoryintensive
 		self.snapshotFilename = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('alarmcascade','snapshotpath'))+str(int(time.time()))+".jpg"
 		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"snapshot.py"), self.snapshotFilename])
+		p.communicate()
+	
+	def playAudio(self,fileName):
+		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"playAudio.py"), fileName])
 		p.communicate()
 	
 	#sends E-Mail to family, friends, ...
@@ -144,11 +143,11 @@ class AlarmCascade(threading.Thread):
 	def processAlarm(self):
 		if(self.messageSended == False):
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallStart')
-			self.pa.playMp3(mp3file)
+			self.playAudio(mp3file)
 			self.makeSnapshot()
 			self.sendEmailMessage()
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','emergencyCallDone')
-			self.pa.playMp3(mp3file)
+			self.playAudio(mp3file)
 			if (self.sipClient == 1):
 				p = subprocess.Popen(rc.config.get('alarmcascade','cmdSipClientStart'))
 				p.communicate()
@@ -160,7 +159,7 @@ class AlarmCascade(threading.Thread):
 			#hier eine schöne Nachricht abspielen
 			if(0 <= int(time.time())%20 <= 3):
 				mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','unexpectedBehavior')
-				self.pa.playMp3(mp3file)
+				self.playAudio(mp3file)
 		elif((self.timestampUnexpBeh > 0) and (int(time.time()) > self.timestampUnexpBeh + self.alarmValidateTime)):
 			self.alarm = True
 

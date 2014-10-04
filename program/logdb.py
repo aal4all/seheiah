@@ -136,9 +136,9 @@ class logDB(object):
 	alle ereignisse zählen, die innerhalb eines bestimmten Zeitraumes aufgetreten sind
 	"""
 	def createProbabilities(self):
-		t1 = int(time.time())
+		t1 = int(time.time()) # starttime of creation of probabilities
 		#at first clean probabilities table
-		self.truncProbabilities()
+		self.truncProbabilities() #perhaps update is better
 		#then caclulate probs
 		interval = rc.config.getint('checkbehavior','interval') #get timeslice length
 		tolerance = interval * rc.config.getint('checkbehavior','toleranceIntervals') #tolerance 
@@ -265,23 +265,25 @@ class logDB(object):
 				if(condition == 10 or c10[i] > 0.0):
 					startTime = t[i] - tolerance #starttime with tolerance
 					endTime = t[i] + tolerance #endtime with tolerance
-					beforeMidnight = False
-					afterMidnight = False
-					#shortly befor midnight
+					# when starttime is shortly before midnight, endtime falls in the next day
+					BeforeMidnight = False
+					endAfterMidnight = 0
+					# when starttime is shortly before midnight, endtime falls in the next day
+					AfterMidnight = False
+					startBeforeMidnight = 0 # when starttime falls in last day
+					#shortly before midnight
 					if (endTime > 86400):
-						endTime = endTime - 86400
+						# endTime = endTime - 86400
 						beforeMidnight = True
+						endAfterMidnight = 86400
 					#shortly after midnight 
 					if (startTime < 0):
-						startTime = startTime + 86400
+						#startTime = startTime + 86400
 						afterMidnight = True
-					if (beforeMidnight or afterMidnight):
-						midnight = "OR"
-					else:
-						midnight = "AND"
+						startBeforeMidnight = 86400
 					values = (today, startTime, startTime, endTime, endTime) #werte für query
 					#suche alle in der Vergangenheit, die innerhalb des Tolleranzbereichs beginnen oder enden
-					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400) >= ? OR ((starttime+duration)%86400) >= ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) " + midnight + " (((starttime%86400) <= ? OR ((starttime+duration)%86400) <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
+					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400)-" + startBeforeMidnight + " > ? OR ((starttime+duration)%86400)-" + startBeforeMidnight + " > ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) AND (((starttime%86400)+" + endAfterMidnight + " <= ? OR ((starttime+duration)%86400)+" + endAfterMidnight + " <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
 					if(i == 1):
 						logging.debug("SQL-query: %s \n values: %s" % (countSql,values))
 					try:
@@ -308,7 +310,7 @@ class logDB(object):
 		del c10[:]
 		del whereClause
 		del t[:]
-		print("time for create probs: %s sec" % (time.time()-t1))
+		logging.info("time for create probs: %s sec" % (time.time()-t1))
 
 	"""
 	writes frequency (probability) of an event in past for an timeslice with tolerance into database

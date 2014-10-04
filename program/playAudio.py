@@ -3,11 +3,12 @@
 
 """
 @author Falko Benthin
-@Date 05.01.2014
+@Date 04.10.2014
 @brief plays audiofiles
 """
 
 import pygame
+import sys
 import logging
 
 class playAudio():
@@ -31,4 +32,7 @@ class playAudio():
 		except Exception, e:
 			logging.error("playAudio error %s" % e)
 
-	
+if __name__ == "__main__":
+	pa = playAudio()
+	fileName = sys.argv[1]
+	pa.playMp3(fileName)

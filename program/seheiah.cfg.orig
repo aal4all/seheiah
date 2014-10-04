@@ -6,6 +6,8 @@ seheiahPath = /home/falko/seheiah/
 #loglevel = DEBUG = 10 | INFO = 20 | WARNING = 30 | ERROR = 40 | CRITICAL = 50
 #path to logfile (relative to path/seheiah)
 logfile = log/seheiah.log
+pocketsphinxLogfile = logs/pocketsphinx.log
+logFilemode = a
 loglevel = 20
 
 [logdb]

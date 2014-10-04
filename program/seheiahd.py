@@ -36,7 +36,8 @@ class Seheiah(object):
 	def run(self):
 		#set logging
 		loglevel = rc.config.getint('logging','loglevel')
-		logging.basicConfig(filename=self.logfile,filemode = 'w',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
+		logFilemode = rc.config.get('logging','logFilemode')
+		logging.basicConfig(filename=self.logfile,filemode=logFilemode,level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 		logging.info("seheiahd started")
 		
 		mythreads = []

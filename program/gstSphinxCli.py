@@ -36,18 +36,16 @@
 """
 
 
-import logging #logfile
+#import logging #logfile
 import os,sys,time
-#from daemon import runner
+import subprocess
 import gobject
 import pygst
 pygst.require('0.10')
-#gobject.threads_init()
 import gst
 #own
 import readConfig as rc
 import absence
-import playAudio
 
 class GstSphinxCli(object):
 
@@ -77,9 +75,7 @@ class GstSphinxCli(object):
 		self.cmdBye = unicode(rc.config.get('speechrecognition','cmdBye'))
 				
 		self.init_gst(hmm, lm, dic)
-		
-		#load playaudio
-		self.pa = playAudio.playAudio()
+
 		
 	def init_gst(self, hmm, lm, dic):
 		#pulsesrc
@@ -128,10 +124,10 @@ class GstSphinxCli(object):
 	def final_result(self, hyp, uttid):
 		""" handle final result `hyp' here """
 		#hyp is unicode string
-		logging.debug('pocketsphinx:' + hyp + ' erkannt')
+		#logging.debug('pocketsphinx:' + hyp + ' erkannt')
 		#start Alarmcascade
 		if(self.cmdHelp in hyp):
-			logging.info(self.cmdHelp.encode() + " detected")
+			#logging.info(self.cmdHelp.encode() + " detected")
 			self.messageToAlarmCascade('HILFE')
 			#send Alarm-message to socket
 		#start test
@@ -140,14 +136,14 @@ class GstSphinxCli(object):
 			#future project
 		#interrupt alarmcascade in case of unexpected behavior
 		if(self.cmdAlarmOff in hyp):
-			logging.info(self.cmdAlarmOff.encode() + " detected")
+			#logging.info(self.cmdAlarmOff.encode() + " detected")
 			self.messageToAlarmCascade('ALARM AUS')
 			#sends alarm aus
 		#deactivate monitoring
 		if(self.cmdBye in hyp):
-			logging.info(self.cmdBye.encode() + " detected")
+			#logging.info(self.cmdBye.encode() + " detected")
 			mp3file = rc.config.get('general','seheiahPath') + rc.config.get('audiofiles','disableMonitoring')
-			self.pa.playMp3(mp3file)
+			self.playAudio(mp3file)
 			if not (self.absence.get()):
 				self.absence.set(int(time.time()))	
 
@@ -162,17 +158,23 @@ class GstSphinxCli(object):
 				client.connect("/tmp/seheiah_alarm.sock")
 				client.send(message)
 			except socket.error:
-				logging.error("Couldn't connect to socket /tmp/seheiah_alarm.sock")
+				print "error: Couldn't connect to socket /tmp/seheiah_alarm.sock"
+				#logging.error("Couldn't connect to socket /tmp/seheiah_alarm.sock")
 			finally:
 				client.close()
 		else:
-			logging.error("socket /tmp/seheiah_alarm.sock doesn't exists")
+			print "error: socket /tmp/seheiah_alarm.sock doesn't exists"
+			#logging.error("socket /tmp/seheiah_alarm.sock doesn't exists")
+	
+	def playAudio(self,fileName):
+		p = subprocess.Popen(["python", os.path.join(os.path.dirname(os.path.abspath(__file__)),"playAudio.py"), fileName])
+		p.communicate()
 			
 	def quit(self):
 		gobject.MainLoop().quit()
 	
 	def run(self):
-		logging.info("Pocketsphinx started")
+		#logging.info("Pocketsphinx started")
 		gobject.MainLoop().run()
 
 def daemonize():
@@ -180,10 +182,12 @@ def daemonize():
 		# Store the Fork PID
 		pid = os.fork()
 		if pid > 0:
-			logging.info('PID: %d' % pid)
+			print "PID: %d" % pid
+			#logging.info('PID: %d' % pid)
 			os._exit(0)
 	except OSError, error:
-		logging.error('Unable to fork. Error: %d (%s)' % (error.errno, error.strerror))
+		print "Unable to fork. Error: %d (%s)" % (error.errno, error.strerror)
+		#logging.error('Unable to fork. Error: %d (%s)' % (error.errno, error.strerror))
 		os._exit(1)
 	
 	try:
@@ -199,14 +203,12 @@ def daemonize():
 
 if __name__ == "__main__":
 	#set logging
-	print "LOGGING"
-	loglevel = rc.config.getint('logging','loglevel')
-	logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','logfile'))
-	logging.basicConfig(filename=logfile,filemode = 'a',level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
-	print "LOGGING CONFIGURED"
+	
+	#think about central logging solution for multiple proceses
+	
+	#loglevel = rc.config.getint('logging','loglevel')
+	#logfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rc.config.get('logging','pocketsphinxLogfile'))
+	#logFilemode = rc.config.get('logging','logFilemode')
+	#logging.basicConfig(filename=logfile,filemode=logFilemode,level=loglevel,format = "%(threadName)s: %(asctime)s  %(name)s [%(levelname)-8s] %(message)s")
 	
 	daemonize()
-
-#app = GstSphinxCli()
-#daemon_runner = runner.DaemonRunner(app)
-#daemon_runner.do_action()
