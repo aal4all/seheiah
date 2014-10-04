@@ -296,7 +296,7 @@ class logDB(object):
 						savedDays = self.getSavedDays(today,condition)
 						offDays = self.getAbsences(t[i],interval,today,savedDays)
 						probability = frequency/(len(savedDays)-offDays)
-						logging.debug("Freq: %s : savedDays: %s : offDays: %s : prob %s" % (frequency,savedDays,offdays,probability))
+						logging.debug("Freq: %s : savedDays: %s : offDays: %s : prob %s" % (frequency,savedDays,offDays,probability))
 					if(condition == 10):
 						c10[i] = probability
 				dbValues.append((condition,t[i],probability))
