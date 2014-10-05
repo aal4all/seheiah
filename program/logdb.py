@@ -299,12 +299,11 @@ class logDB(object):
 						offDays = self.getAbsences(t[i],interval,today,savedDays)
 						probability = frequency/(len(savedDays)-offDays)
 						logging.debug("Freq: %s : savedDays: %s : offDays: %s : prob %s" % (frequency,savedDays,offDays,probability))
+						if(probability > 1.0):
+							logging.warn("Probability higher than 100 Percent. Check consistency of database. Take a look, if every recorded day has an entry in table logged_days.")
 					if(condition == 10):
 						c10[i] = probability
 				dbValues.append((condition,t[i],probability))
-				#self.addProbability(condition,t[i],probability) # t = 603.259572029 sec
-			#self.addProbabilities(dbValues) # t = 10.5220549107 sec
-			#del dbValues[:]
 		self.addProbabilities(dbValues) # t = 8.7100520134 sec
 		del dbValues[:]
 		del c10[:]
@@ -426,11 +425,11 @@ class logDB(object):
 					i += 86400
 				try:
 					self.cursor.execute("SELECT probability FROM probabilities WHERE behavior_type = ? AND time_slice_starttime = ?;",(condition,i))
-					res = self.cursor.fetchone()
-					if (not res):
+					res = self.cursor.fetchone()[0]
+					if res is None:
 						prob = 0.0		
 					else:
-						prob = float(res[0])
+						prob = float(res)
 					cvalues.append(prob)
 				except sqlite3.OperationalError,e:
 					time.sleep(3)
