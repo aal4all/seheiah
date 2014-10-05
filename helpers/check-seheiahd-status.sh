@@ -12,7 +12,9 @@ then
 	sleep 10
 	mpg321 -o alsa -a hw:0,0 $PATH_TO_SEHEIAH/audiofiles/de_seheiahd_isnt_running.mp3
 	cd $PATH_TO_SEHEIAH/program/
+	killall gstSphinxCli.py
 	sudo ./seheiahd.py start &
+	sleep 10
 fi
 
 if [ `ps -e | grep -c "gstSphinxCli.py"` -eq 0 ]

@@ -283,7 +283,7 @@ class logDB(object):
 						startBeforeMidnight = 86400
 					values = (today, startTime, startTime, endTime, endTime) #werte für query
 					#suche alle in der Vergangenheit, die innerhalb des Tolleranzbereichs beginnen oder enden
-					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400)-" + startBeforeMidnight + " > ? OR ((starttime+duration)%86400)-" + startBeforeMidnight + " > ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) AND (((starttime%86400)+" + endAfterMidnight + " <= ? OR ((starttime+duration)%86400)+" + endAfterMidnight + " <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
+					countSql = "SELECT COUNT(DISTINCT (starttime/86400)) FROM activity_log WHERE starttime < ? AND (((starttime%86400)-" + str(startBeforeMidnight) + " > ? OR ((starttime+duration)%86400)-" + str(startBeforeMidnight) + " > ?) " + whereClause[condition,beforeMidnight,afterMidnight] + " ) AND (((starttime%86400)+" + str(endAfterMidnight) + " <= ? OR ((starttime+duration)%86400)+" + str(endAfterMidnight) + " <= ? ) " +  whereClause[condition,beforeMidnight,afterMidnight] + ");"
 					if(i == 1):
 						logging.debug("SQL-query: %s \n values: %s" % (countSql,values))
 					try:
