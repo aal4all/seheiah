@@ -269,7 +269,7 @@ class logDB(object):
 					beforeMidnight = False
 					endAfterMidnight = 0
 					# when starttime is shortly before midnight, endtime falls in the next day
-					AfterMidnight = False
+					afterMidnight = False
 					startBeforeMidnight = 0 # when starttime falls in last day
 					#shortly before midnight
 					if (endTime > 86400):
