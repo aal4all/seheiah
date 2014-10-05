@@ -266,7 +266,7 @@ class logDB(object):
 					startTime = t[i] - tolerance #starttime with tolerance
 					endTime = t[i] + tolerance #endtime with tolerance
 					# when starttime is shortly before midnight, endtime falls in the next day
-					BeforeMidnight = False
+					beforeMidnight = False
 					endAfterMidnight = 0
 					# when starttime is shortly before midnight, endtime falls in the next day
 					AfterMidnight = False
