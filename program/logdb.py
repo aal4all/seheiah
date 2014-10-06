@@ -425,11 +425,11 @@ class logDB(object):
 					i += 86400
 				try:
 					self.cursor.execute("SELECT probability FROM probabilities WHERE behavior_type = ? AND time_slice_starttime = ?;",(condition,i))
-					res = self.cursor.fetchone()[0]
+					res = self.cursor.fetchone()
 					if res is None:
 						prob = 0.0		
 					else:
-						prob = float(res)
+						prob = float(res[0])
 					cvalues.append(prob)
 				except sqlite3.OperationalError,e:
 					time.sleep(3)
@@ -474,11 +474,11 @@ class logDB(object):
 	def getLastDayRecord(self):
 		try:
 			self.cursor.execute("SELECT MAX(logged_day) FROM logged_days;")
-			result = self.cursor.fetchone()[0]
+			result = self.cursor.fetchone()
 			if result is None:
 				lastLoggedDay = 0
 			else:
-				lastLoggedDay = int(result)
+				lastLoggedDay = int(result[0])
 		except sqlite3.OperationalError,e:
 			time.sleep(3)
 			logging.error(str(e))
